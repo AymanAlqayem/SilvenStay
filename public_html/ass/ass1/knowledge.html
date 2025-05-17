@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Knowledge Base</title>
+</head>
+<body>
+
+<header>
+    <figure>
+        <img src="images/logo.png" alt="Community Logo" height="150" width="150">
+    </figure>
+
+    <h1>Welcome to Freakin JS Community</h1>
+
+    <div>
+        <p>A community-driven hub for web developers to learn, collaborate, and share experiences.</p>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="profile.html">User Profiles</a> |
+        <a href="knowledge.html">Knowledge Base</a> |
+        <a href="files.html">File Sharing</a> |
+        <a href="search.html">Search</a> |
+        <a href="contact.html">Contact Us</a>
+    </nav>
+
+    <h1>Knowledge Base</h1>
+
+    <figure>
+        <img src="images/Knowledge.png" alt="Knowledge Base" height="350" width="350">
+    </figure>
+
+    <p>Share and explore web development articles that can help you grow your skills and knowledge.</p>
+</header>
+
+<main>
+    <section>
+        <h2>Submit a New Article</h2>
+        <p>Contribute by sharing valuable knowledge with the community.</p>
+
+        <form action="http://yhassouneh.studentprojects.ritaj.ps/util/process.php" method="post"
+              enctype="multipart/form-data">
+            <fieldset>
+                <legend>Article Details</legend>
+
+                <label for="articleTitle">* Article Title:</label>
+                <input type="text" id="articleTitle" name="title" maxlength="100"
+                       placeholder="Enter the article title" required><br><br>
+
+                <label for="articleCategory">* Category:</label>
+                <select id="articleCategory" name="category" required>
+                    <option value="">-- Select a Topic --</option>
+                    <option value="html-css">HTML & CSS</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="frontend-frameworks">Frontend Frameworks (React, Vue, etc.)</option>
+                    <option value="backend">Backend (Node.js, PHP, etc.)</option>
+                    <option value="databases">Databases (SQL, MongoDB)</option>
+                    <option value="devops">DevOps & Deployment</option>
+                    <option value="web-design">UI/UX & Web Design</option>
+                    <option value="security">Web Security</option>
+                    <option value="other">Other</option>
+                </select><br><br>
+
+                <label for="articleDescription">* Description:</label>
+                <textarea id="articleDescription" name="description" rows="4" maxlength="300"
+                          placeholder="Enter a brief description" required></textarea><br><br>
+
+                <label for="articleContent">* Content:</label>
+                <textarea id="articleContent" name="content" rows="8"
+                          placeholder="Write the article content" required></textarea><br><br>
+
+                <label for="mediaUpload">Attach Image/Screenshot (Optional):</label>
+                <input type="file" id="mediaUpload" name="media" accept="image/*"><br><br>
+
+                <input type="submit" value="Publish Article">
+                <input type="reset" value="Clear Form">
+            </fieldset>
+        </form>
+    </section>
+</main>
+
+<aside>
+    <h3>Back to home</h3>
+    <nav>
+        <a href="index.html">
+            <img src="images/homeIcon.png" alt="Home Icon" height="35" width="35">
+        </a>
+    </nav>
+</aside>
+
+<footer>
+    <p>&copy; 2025 Freakin JS Community | <a href="mailto:nabilayman021@gmail.com">📧 Email</a> | <a
+            href="tel:+972594276335">📞
+        Call</a> | 📍 Palestine, Ramallah</p>
+</footer>
+
+</body>
+</html>

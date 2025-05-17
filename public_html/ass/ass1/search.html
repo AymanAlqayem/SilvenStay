@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+
+<body>
+
+<header>
+    <figure>
+        <img src="images/logo.png" alt="Community Logo" height="150" width="150">
+    </figure>
+
+    <h1>Welcome to Freakin JS Community</h1>
+
+    <div>
+        <p>A community-driven hub for web developers to learn, collaborate, and share experiences.</p>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="profile.html">User Profiles</a> |
+        <a href="knowledge.html">Knowledge Base</a> |
+        <a href="files.html">File Sharing</a> |
+        <a href="search.html">Search</a> |
+        <a href="contact.html">Contact Us</a>
+    </nav>
+
+    <h1>Search Community Content</h1>
+
+    <p>Find articles, users, and files.</p>
+
+    <figure>
+        <img src="images/search.png" alt="Search icon" height="220" width="250">
+        <figcaption>Search for articles, users, and files</figcaption>
+    </figure>
+</header>
+
+<main>
+    <section>
+        <h2>Search Community Content</h2>
+        <form action="http://yhassouneh.studentprojects.ritaj.ps/util/process.php" method="post">
+            <fieldset>
+                <legend>Search Options</legend>
+
+                <div>
+                    <label for="search-query">What are you looking for?</label>
+                    <input type="search" id="search-query" name="q"
+                           placeholder="Search for topics, members,..." minlength="2" maxlength="100"
+                           required>
+                </div>
+
+                <div>
+                    <p>Filter by:</p>
+
+                    <input type="radio" id="filter-all" name="scope" value="all" checked>
+                    <label for="filter-all">Everything</label><br>
+
+                    <input type="radio" id="filter-topics" name="scope" value="topics">
+                    <label for="filter-topics">Discussions</label><br>
+
+                    <input type="radio" id="filter-members" name="scope" value="members">
+                    <label for="filter-members">Members</label><br>
+
+                    <input type="radio" id="filter-files" name="scope" value="files">
+                    <label for="filter-files">Files</label>
+                </div>
+
+                <div>
+                    <button type="submit">
+                        🔍 Search
+                    </button>
+
+                    <button type="reset">
+                        🗑️ Reset
+                    </button>
+                </div>
+
+            </fieldset>
+        </form>
+    </section>
+</main>
+
+<aside>
+    <h3>Back to home</h3>
+    <nav>
+        <a href="index.html">
+            <img src="images/homeIcon.png" alt="Home Icon" height="35" width="35">
+        </a>
+    </nav>
+</aside>
+
+<footer>
+    <p>&copy; 2025 Freakin JS Community | <a href="mailto:nabilayman021@gmail.com">📧 Email</a> | <a
+            href="tel:+972594276335">📞
+        Call</a> | 📍 Palestine, Ramallah</p>
+</footer>
+
+</body>
+</html>

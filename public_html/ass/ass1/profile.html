@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+</head>
+
+<body>
+
+<header>
+    <figure>
+        <img src="images/logo.png" alt="Community Logo" height="150" width="150">
+    </figure>
+
+    <h1>Welcome to Freakin JS Community</h1>
+
+    <div>
+        <p>A community-driven hub for web developers to learn, collaborate, and share experiences.</p>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="profile.html">User Profiles</a> |
+        <a href="knowledge.html">Knowledge Base</a> |
+        <a href="files.html">File Sharing</a> |
+        <a href="search.html">Search</a> |
+        <a href="contact.html">Contact Us</a>
+    </nav>
+
+    <h1>User Profiles</h1>
+</header>
+
+<main>
+    <section>
+        <h3>Connect with other members by setting up your profile.</h3>
+        <figure>
+            <img src="images/userProfile.png" alt="Profile Picture" height="250" width="480">
+        </figure>
+    </section>
+
+    <section>
+        <h2>Create a Profile</h2>
+        <form action="http://yhassouneh.studentprojects.ritaj.ps/util/process.php" method="post"
+              enctype="multipart/form-data">
+            <fieldset>
+                <legend>Personal Information</legend>
+
+                <label for="userName">* Full Name:</label>
+                <input type="text" name="name" id="userName" maxlength="30" placeholder="Enter your Name"
+                       required><br><br>
+
+                <label>Select the gender:</label>
+                <br>
+
+                <input type="radio" name="gender" id="male" value="Male" required>
+                <label for="male">Male</label>
+
+                <input type="radio" name="gender" id="female" value="Female">
+                <label for="female">Female</label><br><br>
+
+                <label for="userEmail">* Email:</label>
+                <input type="email" name="email" id="userEmail" placeholder="Enter Your Email" required><br><br>
+
+                <label for="userBirthdate">* Birthdate:</label>
+                <input type="date" name="birthdate" id="userBirthdate" required><br><br>
+
+                <label for="userPicture">Profile Picture:</label>
+                <input type="file" name="profile_pic" id="userPicture" accept="image/jpeg, image/png"><br><br>
+
+                <label for="userBio">* Bio:</label>
+                <textarea name="bio" id="userBio" maxlength="100" placeholder="Tell us about yourself"
+                          required></textarea><br><br>
+                <input type="submit" value="Create Profile">
+                <input type="reset" value="Clear">
+            </fieldset>
+        </form>
+    </section>
+</main>
+
+<hr>
+
+<aside>
+    <h3>Back to home</h3>
+    <nav>
+        <a href="index.html">
+            <img src="images/homeIcon.png" alt="Home Icon" height="35" width="35">
+        </a>
+    </nav>
+</aside>
+
+<footer>
+    <p>&copy; 2025 Freakin JS Community | <a href="mailto:nabilayman021@gmail.com">📧 Email</a> | <a
+            href="tel:+972594276335">📞
+        Call</a> | 📍 Palestine, Ramallah</p>
+</footer>
+
+</body>
+</html>

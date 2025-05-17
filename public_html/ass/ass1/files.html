@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Sharing</title>
+</head>
+
+<body>
+
+<header>
+    <figure>
+        <img src="images/logo.png" alt="Community Logo" height="150" width="150">
+    </figure>
+
+    <h1>Welcome to Freakin JS Community</h1>
+
+    <div>
+        <p>A community-driven hub for web developers to learn, collaborate, and share experiences.</p>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="profile.html">User Profiles</a> |
+        <a href="knowledge.html">Knowledge Base</a> |
+        <a href="files.html">File Sharing</a> |
+        <a href="search.html">Search</a> |
+        <a href="contact.html">Contact Us</a>
+    </nav>
+
+    <h2>File Sharing</h2>
+
+    <p>Upload and share useful documents with other members.</p>
+
+    <figure>
+        <img src="images/addFile.png" alt="Upload File" height="220" width="350">
+    </figure>
+</header>
+
+<main>
+    <section>
+        <h2>File Upload</h2>
+        <form action="http://yhassouneh.studentprojects.ritaj.ps/util/process.php" method="post"
+              enctype="multipart/form-data">
+            <fieldset>
+                <legend>Share a File</legend>
+
+                <label for="fileName">* Display Name:</label>
+                <input type="text" name="file_name" id="fileName"
+                       placeholder="Enter the shared file name" required><br><br>
+
+                <label for="uploadFile">* Upload File (Max 10MB):</label>
+                <input type="file" name="file" id="uploadFile" required><br><br>
+
+                <label for="fileCategory">* Category:</label>
+                <select name="category" id="fileCategory" required>
+                    <option value="">-- Select --</option>
+                    <option value="templates">Templates</option>
+                    <option value="tutorials">Tutorials</option>
+                    <option value="code-snippets">Code Snippets</option>
+                    <option value="design-assets">Design Assets</option>
+                    <option value="other">Others</option>
+                </select><br><br>
+
+                <label for="description">* Description:</label>
+                <textarea name="description" id="description" rows="4"
+                          placeholder="Describe the file’s purpose, usage, or key features."
+                          required></textarea><br><br>
+
+                <input type="submit" value="Upload File">
+                <input type="reset" value="Clear">
+
+            </fieldset>
+        </form>
+    </section>
+
+    <section>
+        <h2>Shared Files</h2>
+
+        <table border="1" cellpadding="10" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Resource Name</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Size</th>
+                <th>Publish Date</th>
+                <th>Download</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>Bootstrap 5 Starter Template</td>
+                <td>ZIP</td>
+                <td>Framework</td>
+                <td>1.193 MB</td>
+                <td>28/3/2025</td>
+                <td align="center">
+                    <a href="resources/bootstrap-examples.zip" download>
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>HTML5 Cheat Sheet</td>
+                <td>PDF</td>
+                <td>Reference</td>
+                <td>0.26 MB</td>
+                <td>31/3/2025</td>
+                <td align="center">
+                    <a href="resources/html-cheat-sheet.pdf" download>
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>VS Code Settings</td>
+                <td>JSON</td>
+                <td>Editor</td>
+                <td>5 KB</td>
+                <td>1/4/2024</td>
+                <td align="center">
+                    <a href="resources/settings.json" download>
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Modern CSS Reset</td>
+                <td>CSS</td>
+                <td>Stylesheet</td>
+                <td>1 KB</td>
+                <td>4/4/2024</td>
+                <td align="center">
+                    <a href="resources/reset.min.css" download>
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>JS Algorithms Book</td>
+                <td>Text file</td>
+                <td>Programming</td>
+                <td>26 KB</td>
+                <td>4/4/2024</td>
+                <td align="center">
+                    <a href="resources/README.md.txt"
+                       download="js-algorithms.pdf">
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>WWW Favicon</td>
+                <td>ICO</td>
+                <td>Assets</td>
+                <td>4 KB</td>
+                <td>4/4/2024</td>
+                <td align="center">
+                    <a href="resources/WWW_favicon.png" download>
+                        <img src="images/downloadIcon.gif" alt="Download" width="20" height="20">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<aside>
+    <h3>Back to home</h3>
+    <nav>
+        <a href="index.html">
+            <img src="images/homeIcon.png" alt="Home Icon" height="35" width="35">
+        </a>
+    </nav>
+</aside>
+
+<footer>
+    <p>&copy; 2025 Freakin JS Community | <a href="mailto:nabilayman021@gmail.com">📧 Email</a> | <a
+            href="tel:+972594276335">📞
+        Call</a> | 📍 Palestine, Ramallah</p>
+</footer>
+</body>
+</html>
