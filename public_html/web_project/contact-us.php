@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 
             <footer class="faq-footer">
                 <p>Didn't find your answer? Contact our support team for personalized assistance.<a
-                            href="tel:+972594276335" class="cta-button secondary">Call Now </a></p>
+                            href="tel:+972594276335">Call Now </a></p>
             </footer>
         </section>
 
@@ -230,9 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             <article class="cta-content">
                 <h3>Ready to Find Your Perfect Home?</h3>
                 <p>Our team is standing by to help you discover properties that match your lifestyle and budget.</p>
-                <nav class="cta-buttons">
-                    <a href="tel:+972594276335" class="cta-button secondary">Call Now </a>
-                </nav>
             </article>
         </section>
     </main>
