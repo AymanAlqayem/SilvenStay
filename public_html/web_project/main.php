@@ -6,42 +6,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="site-header">
-    <section class="logo-section">
-        <img src="images/logo.png" alt="SilvenStay Logo" class="logo">
-        <h1>SilvenStay For Flat Rent.</h1>
-    </section>
-    <section class="header-links">
-        <section class="auth-links">
-            <a href="#" class="auth-link">Contact Us</a>
-            <a href="#" class="auth-link">Register</a>
-            <a href="#" class="auth-link">Login</a>
-            <a href="#" class="auth-link">Logout</a>
-        </section>
-        <section class="basket-link">
-            <img src="images/basket.png" alt="basket image" class="basket-image">
-        </section>
-        <section class="user-card">
-            <img src="images/profileIcon.png" alt="Profile Icon" class="profile-icon">
-            <section class="user-card-info">
-                <img src="images/profileIcon.png" alt="User Photo" class="user-photo">
-                <span class="username">JohnDoe</span>
-                <a href="#" class="profile-link">View Profile</a>
-            </section>
-        </section>
-    </section>
-</header>
+<?php include 'header.php'; ?>
 <section class="content-wrapper">
-    <nav class="site-nav">
-        <ul>
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Flat Search</a></li>
-            <li><a href="#">View Messages</a></li>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Register</a></li>
-            <li><a href="#">Login</a></li>
-        </ul>
-    </nav>
+    <?php include 'nav.php'; ?>
     <main class="site-main">
         <section class="promotional">
             <h2>Featured Properties</h2>
@@ -94,20 +61,6 @@
         </section>
     </main>
 </section>
-<footer class="site-footer">
-    <section class="footer-content">
-        <section class="footer-logo">
-            <img src="images/logo.png" alt="SilvenStay Logo">
-            <span>A sophisticated, modern place to stay — where luxury and comfort meet.</span>
-        </section>
-        <address class="footer-info">
-            <p>© 2025 SilvenStay. All rights reserved.</p>
-            <p>📍Palestine - Ramallah</p>
-            <p><a href="mailto:nabilayman021@gmail.com">📧 Email</a></p>
-            <p><a href="tel:+972594276335">📞 Customer Support</a></p>
-            <a href="#" class="contact-link">📬 Contact Us</a>
-        </address>
-    </section>
-</footer>
+<?php include 'footer.php'; ?>
 </body>
 </html>
