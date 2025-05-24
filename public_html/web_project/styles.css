@@ -1,4 +1,21 @@
-/* Reset and base styles */
+/*
+ * CSS Stylesheet for SilvenStay For Flat Rent
+ *
+ * Table of Contents:
+ * 1. Reset and Base Styles
+ * 2. Header Styles
+ * 3. Content Wrapper Styles
+ * 4. Navigation Styles
+ * 5. Main Content Styles
+ * 6. Footer Styles
+ * 7. Responsive Adjustments
+ */
+
+/* 1. Reset and Base Styles
+   Purpose: Normalize default browser styles and set global properties for consistency.
+   - Resets margins, padding, and uses border-box for box-sizing.
+   - Sets a consistent font family and background color for the body.
+*/
 * {
     margin: 0;
     padding: 0;
@@ -10,93 +27,178 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f9f7f3;
-    color: #333;
-    line-height: 1.6;
+    background-color: #f9f7f3; /* Light beige background for a warm feel */
+    color: #333; /* Dark gray for text readability */
+    line-height: 1.6; /* Improved readability for text content */
 }
 
-/* Header styles */
+/* 2. Header Styles
+   Purpose: Style the header section, including logo, auth links, basket, and user profile.
+   - Maintains the logo and title as specified, positions profile icon at the end.
+   - Auth links have a creative sliding underline effect on hover.
+   - Profile icon (custom image) toggles a larger card below on click with user photo, username, and profile link.
+*/
 .site-header {
-    background-color: #2a2a2a;
-    color: #f9f7f3;
+    background-color: #2a2a2a; /* Dark gray background for contrast */
+    color: #f9f7f3; /* Light beige text for readability */
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .logo-section {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1rem; /* Space between logo and title */
 }
 
 .logo {
     width: 70px;
-    height: 70px;
-    /*border-radius: 50%;*/
-    /*border: 2px solid #B79C67;*/
+    height: 70px; /* Consistent logo size */
 }
 
 .site-header h1 {
     font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: 1px;
-    color: #B79C67;
+    color: #B79C67; /* Gold accent for branding */
 }
 
 .header-links {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 2rem; /* Space between header elements */
+}
+
+.auth-links {
+    display: flex;
+    gap: 1.5rem; /* Space between auth links */
+}
+
+.auth-link {
+    position: relative; /* For positioning the underline */
+    color: #f9f7f3;
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 0.3rem; /* Space for underline effect */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.auth-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #B79C67; /* Gold underline */
+    transition: width 0.3s ease; /* Smooth expansion of underline */
+}
+
+.auth-link:hover::after {
+    width: 100%; /* Underline expands on hover */
+}
+
+.auth-link:hover {
+    color: #B79C67; /* Gold color on hover */
+}
+
+.basket-link {
+    display: flex;
+    align-items: center;
 }
 
 .basket-image {
     height: 40px;
-    width: 40px;
+    width: 40px; /* Consistent basket icon size */
 }
 
-.about-link, .basket-link, .auth-links a {
+.basket-link:hover {
+    opacity: 0.8; /* Subtle fade on hover */
+}
+
+.user-card {
+    position: relative; /* For positioning the card */
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon {
+    width: 50px; /* Matches previous 1.2rem font-size for consistency */
+    height: 50px;
+    border-radius: 50%; /* Optional: circular icon */
+    cursor: pointer; /* Indicate interactivity */
+    transition: opacity 0.3s; /* Smooth hover effect */
+}
+
+.profile-icon:hover {
+    opacity: 0.8; /* Subtle fade on hover */
+}
+
+.user-card-info {
+    position: absolute;
+    top: calc(100% + 0.5rem); /* Position below the icon */
+    right: 0; /* Align to the right edge of the icon */
+    background-color: #3a3a3a; /* Matches nav background for consistency */
+    border: 1px solid #B79C67; /* Gold border for card effect */
+    border-radius: 6px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow for larger card */
+    padding: 1.2rem; /* More padding for a larger card */
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: 0.8rem; /* Increased space between elements */
+    width: 200px; /* Larger width for a bigger card */
+    z-index: 10; /* Ensure card appears above other elements */
+}
+
+.user-card-info.show {
+    display: flex; /* Show card when .show class is applied */
+}
+
+.user-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid #B79C67; /* Gold border for photo */
+    object-fit: cover;
+}
+
+.username {
     color: #f9f7f3;
+    font-size: 1rem; /* Slightly larger font for readability */
+    font-weight: 500;
+}
+
+.profile-link {
+    color: #B79C67;
     text-decoration: none;
+    font-size: 0.9rem; /* Slightly larger for readability */
     font-weight: 500;
     transition: color 0.3s;
 }
 
-.about-link:hover, .basket-link:hover, .auth-links a:hover {
-    color: #B79C67;
+.profile-link:hover {
+    color: #d4b985; /* Lighter gold on hover */
 }
 
-.user-card {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.user-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #B79C67;
-}
-
-.profile-link {
-    color: #f9f7f3;
-    font-size: 0.9rem;
-}
-
-
-/* Content wrapper */
+/* 3. Content Wrapper Styles
+   Purpose: Structure the main content and navigation layout using a semantic section.
+   - Uses flexbox to ensure navigation and main content fill the available space.
+*/
 .content-wrapper {
     display: flex;
-    flex: 1;
+    flex: 1; /* Fills remaining vertical space */
 }
 
-/* Navigation styles - strictly 15% width */
+/* 4. Navigation Styles
+   Purpose: Style the sidebar navigation with a fixed width of 15%.
+   - Includes hover and active states with a gold accent border.
+*/
 .site-nav {
-    width: 15%;
-    background-color: #3a3a3a;
+    width: 15%; /* Fixed width as specified */
+    background-color: #3a3a3a; /* Slightly lighter than header for contrast */
     padding: 2rem 0;
 }
 
@@ -112,14 +214,14 @@ body {
     text-decoration: none;
     padding: 1rem 1.5rem;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
+    transition: all 0.3s ease; /* Smooth transitions for hover effects */
+    border-left: 4px solid transparent; /* Space for active/hover border */
 }
 
 .site-nav li a:hover {
     background-color: #2a2a2a;
     color: #B79C67;
-    border-left: 4px solid #B79C69;
+    border-left: 4px solid #B79C67; /* Gold border on hover */
     padding-left: 1.5rem;
 }
 
@@ -127,20 +229,24 @@ body {
     background-color: #2a2a2a;
     color: #B79C67;
     font-weight: 600;
-    border-left: 4px solid #B79C67;
+    border-left: 4px solid #B79C67; /* Gold border for active link */
 }
 
 .site-nav li a i {
     margin-right: 0.8rem;
     width: 1.2rem;
-    text-align: center;
+    text-align: center; /* Align icons for consistency */
 }
 
-/* Main content styles */
+/* 5. Main Content Styles
+   Purpose: Style the main content area, including promotional properties and search form.
+   - Property cards have hover effects with transform and shadow.
+   - Search form is styled for clarity and usability.
+*/
 .site-main {
     flex: 1;
     padding: 2rem;
-    background-color: white;
+    background-color: white; /* White background for main content */
 }
 
 .promotional h2 {
@@ -148,7 +254,7 @@ body {
     color: #2a2a2a;
     margin-bottom: 1.5rem;
     font-weight: 600;
-    border-bottom: 2px solid #B79C67;
+    border-bottom: 2px solid #B79C67; /* Gold underline for headings */
     padding-bottom: 0.5rem;
     display: inline-block;
 }
@@ -164,19 +270,13 @@ body {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effects */
     background-color: #f9f7f3;
 }
 
 .property-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(183, 156, 103, 0.2);
-}
-
-.property-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 10px 20px rgba(183, 156, 103, 0.2); /* Gold-tinted shadow */
 }
 
 .property-card figcaption {
@@ -204,11 +304,11 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .property-card button:hover {
-    background-color: #9a8256;
+    background-color: #9a8256; /* Darker gold on hover */
     color: #f9f7f3;
 }
 
@@ -250,7 +350,7 @@ body {
 .form-group input:focus, .form-group select:focus {
     outline: none;
     border-color: #B79C67;
-    box-shadow: 0 0 0 2px rgba(183, 156, 103, 0.2);
+    box-shadow: 0 0 0 2px rgba(183, 156, 103, 0.2); /* Gold focus ring */
 }
 
 .search-button {
@@ -262,15 +362,18 @@ body {
     cursor: pointer;
     font-size: 1rem;
     font-weight: 500;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .search-button:hover {
     background-color: #B79C67;
-    color: #2a2a2a;
+    color: #2a2a2a; /* Dark text on gold background */
 }
 
-/* Footer styles */
+/* 6. Footer Styles
+   Purpose: Style the footer with logo, description, and contact information.
+   - Ensures consistent branding with gold accents.
+*/
 .site-footer {
     background-color: #2a2a2a;
     color: #f9f7f3;
@@ -303,10 +406,6 @@ body {
     text-align: right;
 }
 
-.footer-info, a:hover {
-
-}
-
 .footer-info p {
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
@@ -318,7 +417,7 @@ body {
 }
 
 .footer-info a:hover {
-    color: #d4b985;
+    color: #d4b985; /* Lighter gold on hover */
 }
 
 .contact-link {
@@ -328,54 +427,57 @@ body {
     transition: color 0.3s;
 }
 
-/* Responsive adjustments */
-/*@media (max-width: 768px) {*/
-/*    .content-wrapper {*/
-/*        flex-direction: column;*/
-/*    }*/
-
-/*    .site-nav {*/
-/*        width: 100%;*/
-/*        order: 2;*/
-/*        padding: 1rem 0;*/
-/*    }*/
-
-/*    .site-nav ul {*/
-/*        flex-direction: row;*/
-/*        flex-wrap: wrap;*/
-/*        justify-content: center;*/
-/*    }*/
-
-/*    .site-nav li a {*/
-/*        padding: 0.8rem 1rem;*/
-/*        border-left: none;*/
-/*        border-bottom: 4px solid transparent;*/
-/*    }*/
-
-/*    .site-nav li a:hover, .site-nav li a.active {*/
-/*        border-left: none;*/
-/*        border-bottom: 4px solid #B79C67;*/
-/*        padding-left: 1rem;*/
-/*    }*/
-
-/*    .site-main {*/
-/*        order: 1;*/
-/*        padding: 1.5rem;*/
-/*    }*/
-
-/*    .header-links {*/
-/*        flex-direction: column;*/
-/*        gap: 1rem;*/
-/*        align-items: flex-end;*/
-/*    }*/
-
-/*    .footer-content {*/
-/*        flex-direction: column;*/
-/*        text-align: center;*/
-/*        gap: 1.5rem;*/
-/*    }*/
-
-/*    .footer-info {*/
-/*        text-align: center;*/
-/*    }*/
-/*}*/
+/* 7. Responsive Adjustments
+   Purpose: Provide styles for smaller screens.
+   - Adjusts layout for mobile devices, making navigation and footer stack vertically.
+   - Ensures user-card-info remains below icon for mobile to avoid overflow.
+*/
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    .site-nav {
+        width: 100%;
+        order: 2;
+        padding: 1rem 0;
+    }
+    .site-nav ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .site-nav li a {
+        padding: 0.8rem 1rem;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+    }
+    .site-nav li a:hover, .site-nav li a.active {
+        border-left: none;
+        border-bottom: 4px solid #B79C67;
+        padding-left: 1rem;
+    }
+    .site-main {
+        order: 1;
+        padding: 1.5rem;
+    }
+    .header-links {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+    .user-card-info {
+        right: 0; /* Align to right edge of icon */
+        left: auto; /* Override any left positioning */
+        transform: none; /* Remove transform for simple positioning */
+        top: calc(100% + 0.5rem); /* Position below icon */
+        margin-right: 0; /* Remove margin for consistent positioning */
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    .footer-info {
+        text-align: center;
+    }
+}
