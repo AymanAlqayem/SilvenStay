@@ -22,6 +22,12 @@
     font-family: 'Georgia', 'Times New Roman', serif;
 }
 
+::selection {
+    color: black;
+    background: #F29F58;
+}
+
+
 body {
     display: flex;
     flex-direction: column;
@@ -469,12 +475,36 @@ body {
 }
 
 .contact-hero {
+    position: relative;
     text-align: center;
-    padding: 3rem 1rem;
-    background-color: #2a2a2a;
+    padding: 5rem 1rem;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
     color: #f9f7f3;
-    border-radius: 8px;
-    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-wave img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.hero-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 0; /* Removes extra space below image */
 }
 
 .contact-hero h2 {
@@ -497,6 +527,7 @@ body {
     max-width: 1200px;
     margin: 0 auto 3rem;
 }
+
 
 .contact-info h3, .contact-form-section h3, .contact-map h3, .faq-section h3 {
     font-size: 1.8rem;
@@ -670,4 +701,173 @@ body {
 .faq-item p {
     font-size: 1rem;
     color: #333;
+}
+
+/* Social Media Icons */
+.social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.social-links a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(183, 156, 103, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #B79C67;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: #B79C67;
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Form Styles */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .input-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+/* Input Field Styles */
+.input-field {
+    position: relative;
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.input-field label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: white;
+    padding: 0 0.5rem;
+    transform-origin: left top;
+}
+
+.input-field input,
+.input-field textarea,
+.input-field select {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    transition: border-color 0.3s;
+}
+
+.input-field input:focus,
+.input-field textarea:focus,
+.input-field select:focus {
+    outline: none;
+    border-color: #B79C67;
+}
+
+/* Floating Label Effect */
+.input-field input:focus + label,
+.input-field input:not(:placeholder-shown) + label,
+.input-field textarea:focus + label,
+.input-field textarea:not(:placeholder-shown) + label,
+.input-field select:focus + label,
+.input-field select:not([value=""]) + label {
+    transform: translateY(-1.5rem) scale(0.85);
+    color: #B79C67;
+}
+
+/* Select Field Specific Styles */
+.select-field {
+    position: relative;
+}
+
+.select-field select {
+    appearance: none;
+    padding-right: 2.5rem;
+}
+
+.select-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+}
+
+/* Textarea Specific Styles */
+.textarea-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Button Styles */
+.submit-button {
+    background-color: #B79C67;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.submit-button:hover {
+    background-color: #9a8256;
+}
+
+/* Privacy Note */
+.privacy-note {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.privacy-note i {
+    color: #B79C67;
+    margin-right: 0.5rem;
+}
+
+.form-success-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
