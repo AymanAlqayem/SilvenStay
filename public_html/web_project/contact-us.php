@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
     <?php include 'nav.php'; ?>
 
     <main class="site-main contact-main">
+
         <!-- Hero Section -->
         <section class="contact-hero">
             <article class="hero-content">
@@ -64,15 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <h4>Visit Our Office</h4>
                         <p>Al-Masyoun, Ramallah, Palestine</p>
                         <p>Building 12, Floor 3</p>
-                        <a href="#" class="card-link">Get Directions </a>
                     </article>
 
                     <article class="info-card">
                         <figure class="card-icon">
                         </figure>
                         <h4>Call Our Team</h4>
-                        <p><a href="tel:+972594276335">+972 59-4276335</a></p>
-                        <p>Mon-Fri: 9 AM - 5 PM</p>
+                        <p><a href="tel:+972594276335">+972 594276335</a></p>
+                        <p>Mon-Fri: 9 AM - 4 PM</p>
                     </article>
 
                     <article class="info-card">
@@ -88,15 +88,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </figure>
                         <h4>Social Media</h4>
                         <nav class="social-links">
-                            <a href="#" aria-label="Facebook">
+                            <a href="https://www.facebook.com/ayman.nabil.58726" target="_blank" aria-label="Facebook">
                                 <img src="images/facebook.png" alt="facebook icon">
                             </a>
 
-                            <a href="#" aria-label="Instagram">
+                            <a href="http://instagram.com/ayman_tarifi" target="_blank" aria-label="Instagram">
                                 <img src="images/instagram.png" alt="instagram icon">
                             </a>
 
-                            <a href="#" aria-label="LinkedIn">
+                            <a href="https://www.linkedin.com/in/ayman-alqayem-9012a232a/" target="_blank"
+                               aria-label="LinkedIn">
                                 <img src="images/linkedin.png" alt="linkedin icon">
                             </a>
                         </nav>
@@ -225,7 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
             </footer>
         </section>
 
-        <!-- Call to Action -->
         <section class="contact-cta">
             <article class="cta-content">
                 <h3>Ready to Find Your Perfect Home?</h3>
