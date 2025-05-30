@@ -247,7 +247,8 @@ p, a, span, li {
     padding: 2rem 0;
     position: fixed;
     top: 5rem;
-    height: calc(100vh - 5rem);
+    /*height: calc(100vh - 5rem);*/
+    height: 100%;
     overflow-y: auto;
     /*z-index: 90;*/
 }
@@ -265,7 +266,7 @@ p, a, span, li {
     padding: 1rem 1.5rem;
     font-size: 1.1rem;
     transition: all 0.3s ease;
-    border-left: 4px solid transparent;
+    border-left: 5px solid transparent;
 }
 
 .site-nav li a:hover {
@@ -369,6 +370,7 @@ p, a, span, li {
     background-color: #9a8256;
     color: #f9f7f3;
 }
+
 
 /* Contact Us Page (contact-us.php).
    -------------------------------- */
@@ -688,6 +690,7 @@ p, a, span, li {
     border-radius: 8px;
     margin: 3rem 0;
 }
+
 
 /* About Us Page (aboutUs.php)
    -------------------------------- */
@@ -1155,3 +1158,234 @@ time {
 .contact-link:hover {
     color: #d4b985;
 }
+
+
+/* Registration Container */
+.registration-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Progress Bar */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.progress-steps:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ddd;
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    color: #999;
+}
+
+.step.active {
+    border-color: #4a6bff;
+    color: #4a6bff;
+}
+
+.step.completed {
+    border-color: #4CAF50;
+    background: #4CAF50;
+    color: white;
+}
+
+/* Form Styles */
+.registration-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-section {
+    grid-column: 1 / -1;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.form-section-title {
+    margin-bottom: 15px;
+    color: #4a6bff;
+    font-size: 18px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    padding-left: 10px;
+    border-left: 3px solid #4a6bff;
+}
+
+.form-label.required:after {
+    content: ' *';
+    color: #ff6b6b;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #4a6bff;
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.1);
+    background-color: #f5f7ff;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Form Actions */
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-next {
+    background: #4a6bff;
+    color: white;
+}
+
+.btn-back {
+    background: white;
+    color: #4a6bff;
+    border: 1px solid #4a6bff;
+}
+
+.btn-confirm {
+    background: #4CAF50;
+    color: white;
+}
+
+/* Remove number input arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Consistent hover for all buttons */
+.btn:hover {
+    background-color: wheat;
+    color: darkred;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+    grid-column: 1 / -1;
+}
+
+/* Review Group Styles */
+.review-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.review-item {
+    display: flex;
+    align-items: center;
+    background: #f9f7f3;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.review-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(183, 156, 103, 0.2);
+    border-color: #B79C67;
+}
+
+.review-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: #4a6bff;
+}
+
+.review-content {
+    flex: 1;
+}
+
+.review-content dt {
+    font-weight: 600;
+    color: #2a2a2a;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.review-content dd {
+    margin: 0;
+    color: #555;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+
+
+
+
+
+
+
+
