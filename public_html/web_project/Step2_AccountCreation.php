@@ -1,10 +1,14 @@
 <?php
 session_start();
 
-$error = '';
+// Redirect if step1 not completed
+if (!isset($_SESSION['step1'])) {
+    header("Location: Step1_Registration.php");
+    exit;
+}
 
-// Initialize form fields
-$email = $_SESSION['step2']['email'] ?? ($_SESSION['step1']['email'] ?? '');
+$error = '';
+$email = $_SESSION['step2']['email'] ?? $_SESSION['step1']['email'] ?? '';
 $password = $_SESSION['step2']['password'] ?? '';
 $confirm_password = $_SESSION['step2']['confirm_password'] ?? '';
 
@@ -14,24 +18,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // Save form data to session
-    $_SESSION['step2'] = [
-        'email' => $email,
-        'password' => $password,
-        'confirm_password' => $confirm_password
-    ];
-
-    $pattern = '/^[0-9].{4,13}[a-z]$/';
-
-    if (!preg_match($pattern, $password)) {
-        $error = "Password must be 6–15 characters, start with a digit, and end with a lowercase letter.";
-    } elseif ($password !== $confirm_password) {
-        $error = "Passwords do not match.";
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format";
     } else {
-        // Ensure session data is written before redirect
-        session_write_close();
-        header("Location: Step3_ReviewAndConfirm.php");
-        exit;
+        // Check email uniqueness (pseudo-code - implement your database check)
+        $email_exists = false; // Replace with actual database check
+
+        if ($email_exists) {
+            $error = "Email is already registered";
+        } else {
+            $pattern = '/^[0-9].{4,13}[a-z]$/';
+
+            if (!preg_match($pattern, $password)) {
+                $error = "Password must be 6–15 characters, start with a digit, and end with a lowercase letter";
+            } elseif ($password !== $confirm_password) {
+                $error = "Passwords do not match";
+            } else {
+                $_SESSION['step2'] = [
+                    'email' => $email,
+                    'password' => $password,
+                    'confirm_password' => $confirm_password
+                ];
+                header("Location: Step3_ReviewAndConfirm.php");
+                exit;
+            }
+        }
     }
 }
 ?>
@@ -47,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
-<div class="content-wrapper">
+<section class="content-wrapper">
     <main class="site-main">
         <section class="registration-container">
             <nav class="progress-steps" aria-label="Registration progress">
@@ -60,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 <h1>Create Your E-Account</h1>
             </header>
 
+            <?php if (!empty($error)): ?>
+                <article class="error-message"><?= htmlspecialchars($error) ?></article>
+            <?php endif; ?>
+
             <form action="Step2_AccountCreation.php" method="POST" class="registration-form">
                 <input type="hidden" name="step" value="2">
-
-                <?php if (!empty($error)): ?>
-                    <div class="error-message"><?= htmlspecialchars($error) ?></div>
-                <?php endif; ?>
 
                 <fieldset class="form-group">
                     <label for="email" class="form-label required">Email</label>
@@ -90,13 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 </fieldset>
 
                 <section class="form-actions">
-                    <button type="button" class="btn btn-back" onclick="window.location.href='index.php'">← Back</button>
+                    <button type="button" class="btn btn-back" onclick="window.location.href='Step1_Registration.php'">←
+                        Back
+                    </button>
                     <button type="submit" class="btn btn-next">Next Step →</button>
                 </section>
             </form>
         </section>
     </main>
-</div>
+</section>
 
 <?php include 'footer.php'; ?>
 </body>

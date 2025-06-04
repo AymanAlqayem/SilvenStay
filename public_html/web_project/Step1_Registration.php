@@ -1,27 +1,57 @@
 <?php
 session_start();
 
-// Save form data to session on POST
+// Initialize form fields
+$step1 = $_SESSION['step1'] ?? [];
+$user_type = $_SESSION['user_type'] ?? 'Customer';
+
+// Handle POST submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '1') {
-    $_SESSION['step1'] = [
-        'national_id' => $_POST['national_id'] ?? '',
-        'name' => $_POST['name'] ?? '',
-        'flat_no' => $_POST['flat_no'] ?? '',
-        'street' => $_POST['street'] ?? '',
-        'city' => $_POST['city'] ?? '',
-        'postal_code' => $_POST['postal_code'] ?? '',
-        'dob' => $_POST['dob'] ?? '',
-        'email' => $_POST['email'] ?? '',
-        'mobile' => $_POST['mobile'] ?? '',
-        'telephone' => $_POST['telephone'] ?? ''
+    // Validate required fields
+    $required_fields = [
+        'national_id', 'name', 'flat_no', 'street', 'city',
+        'postal_code', 'dob', 'email', 'mobile'
     ];
-    // Ensure session data is written before redirect
-    session_write_close();
-    header("Location: Step2_AccountCreation.php");
-    exit;
+
+    $errors = [];
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $errors[] = ucfirst(str_replace('_', ' ', $field)) . " is required";
+        }
+    }
+
+    // Additional validation for owners
+    if ($_POST['user_type'] === 'Owner') {
+        $owner_fields = ['bank_name', 'bank_branch', 'bank_account'];
+        foreach ($owner_fields as $field) {
+            if (empty($_POST[$field])) {
+                $errors[] = ucfirst(str_replace('_', ' ', $field)) . " is required for owners";
+            }
+        }
+    }
+
+    if (empty($errors)) {
+        $_SESSION['user_type'] = $_POST['user_type'] ?? 'Customer';
+        $_SESSION['step1'] = [
+            'national_id' => $_POST['national_id'],
+            'name' => $_POST['name'],
+            'flat_no' => $_POST['flat_no'],
+            'street' => $_POST['street'],
+            'city' => $_POST['city'],
+            'postal_code' => $_POST['postal_code'],
+            'dob' => $_POST['dob'],
+            'email' => $_POST['email'],
+            'mobile' => $_POST['mobile'],
+            'telephone' => $_POST['telephone'] ?? '',
+            'bank_name' => $_POST['bank_name'] ?? '',
+            'bank_branch' => $_POST['bank_branch'] ?? '',
+            'bank_account' => $_POST['bank_account'] ?? ''
+        ];
+        header("Location: Step2_AccountCreation.php");
+        exit;
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
-<div class="content-wrapper">
+<section class="content-wrapper">
     <main class="site-main">
         <section class="registration-container">
             <nav class="progress-steps" aria-label="Registration progress">
@@ -46,69 +76,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 <h1>Personal Details</h1>
             </header>
 
+            <?php if (!empty($errors)): ?>
+                <div class="error-message">
+                    <?php foreach ($errors as $error): ?>
+                        <p><?= htmlspecialchars($error) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
             <form action="Step1_Registration.php" method="POST" class="registration-form">
                 <input type="hidden" name="step" value="1">
 
                 <fieldset class="form-group">
+                    <label for="user_type" class="form-label required">User Type</label>
+                    <select id="user_type" name="user_type" class="form-input" required onchange="toggleBankDetails()">
+                        <option value="Customer" <?= $user_type === 'Customer' ? 'selected' : '' ?>>Customer</option>
+                        <option value="Owner" <?= $user_type === 'Owner' ? 'selected' : '' ?>>Owner</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="form-group">
                     <label for="national_id" class="form-label required">National ID</label>
-                    <input type="number" id="national_id" name="national_id" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['national_id'] ?? '') ?>">
+                    <input type="text" id="national_id" name="national_id" class="form-input" required
+                           value="<?= htmlspecialchars($step1['national_id'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="name" class="form-label required">Full Name</label>
                     <input type="text" id="name" name="name" class="form-input" required pattern="[A-Za-z ]+"
                            title="Only alphabetic characters and spaces allowed"
-                           value="<?= htmlspecialchars($_SESSION['step1']['name'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['name'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="flat_no" class="form-label required">Flat/House No</label>
                     <input type="text" id="flat_no" name="flat_no" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['flat_no'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['flat_no'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="street" class="form-label required">Street Name</label>
                     <input type="text" id="street" name="street" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['street'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['street'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="city" class="form-label required">City</label>
                     <input type="text" id="city" name="city" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['city'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['city'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="postal_code" class="form-label required">Postal Code</label>
                     <input type="text" id="postal_code" name="postal_code" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['postal_code'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['postal_code'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="dob" class="form-label required">Date of Birth</label>
                     <input type="date" id="dob" name="dob" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['dob'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['dob'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="email" class="form-label required">Email</label>
                     <input type="email" id="email" name="email" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['email'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['email'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="mobile" class="form-label required">Mobile Number</label>
                     <input type="number" id="mobile" name="mobile" class="form-input" required
-                           value="<?= htmlspecialchars($_SESSION['step1']['mobile'] ?? '') ?>">
+                           value="<?= htmlspecialchars($step1['mobile'] ?? '') ?>">
                 </fieldset>
 
                 <fieldset class="form-group">
                     <label for="telephone" class="form-label">Telephone Number</label>
-                    <input type="tel" id="telephone" name="telephone" class="form-input"
-                           value="<?= htmlspecialchars($_SESSION['step1']['telephone'] ?? '') ?>">
+                    <input type="number" id="telephone" name="telephone" class="form-input"
+                           value="<?= htmlspecialchars($step1['telephone'] ?? '') ?>">
                 </fieldset>
+
+                <section id="bank-details" style="<?= $user_type === 'Owner' ? '' : 'display: none;' ?>">
+                    <fieldset class="form-group">
+                        <label for="bank_name" class="form-label required">Bank Name</label>
+                        <input type="text" id="bank_name" name="bank_name" class="form-input"
+                               value="<?= htmlspecialchars($step1['bank_name'] ?? '') ?>"
+                            <?= $user_type === 'Owner' ? 'required' : '' ?>>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="bank_branch" class="form-label required">Bank Branch</label>
+                        <input type="text" id="bank_branch" name="bank_branch" class="form-input"
+                               value="<?= htmlspecialchars($step1['bank_branch'] ?? '') ?>"
+                            <?= $user_type === 'Owner' ? 'required' : '' ?>>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="bank_account" class="form-label required">Bank Account Number</label>
+                        <input type="text" id="bank_account" name="bank_account" class="form-input"
+                               value="<?= htmlspecialchars($step1['bank_account'] ?? '') ?>"
+                            <?= $user_type === 'Owner' ? 'required' : '' ?>>
+                    </fieldset>
+                </section>
 
                 <section class="form-actions">
                     <button type="submit" class="btn btn-next">Next Step →</button>
@@ -116,7 +185,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             </form>
         </section>
     </main>
-</div>
+</section>
+
+<script>
+    function toggleBankDetails() {
+        const userType = document.getElementById('user_type').value;
+        const bankDetails = document.getElementById('bank-details');
+        const bankInputs = bankDetails.querySelectorAll('input');
+
+        if (userType === 'Owner') {
+            bankDetails.style.display = 'block';
+            bankInputs.forEach(input => input.required = true);
+        } else {
+            bankDetails.style.display = 'none';
+            bankInputs.forEach(input => input.required = false);
+        }
+    }
+</script>
 
 <?php include 'footer.php'; ?>
 </body>
