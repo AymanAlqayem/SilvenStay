@@ -1,17 +1,50 @@
 <?php
 // Determine the current page to set active link
 $current_page = basename($_SERVER['PHP_SELF']);
+// Determine user role from session, default to 'guest' if not set
+$user_role = isset($_SESSION['user_type']) ? strtolower($_SESSION['user_type']) : 'guest';
+
+// Define navigation links based on user role
+$nav_links = [
+    'guest' => [
+        ['text' => 'Home', 'href' => 'main.php'],
+        ['text' => 'About Us', 'href' => 'aboutUs.php'],
+        ['text' => 'Flat Search', 'href' => 'flatSearch.php'],
+        ['text' => 'Contact Us', 'href' => 'contact-us.php']
+    ],
+    'customer' => [
+        ['text' => 'Home', 'href' => 'main.php'],
+        ['text' => 'About Us', 'href' => 'aboutUs.php'],
+        ['text' => 'Search', 'href' => 'flatSearch.php'],
+        ['text' => 'View Rented Flats', 'href' => 'viewRentedFlats.php'],
+        ['text' => 'Profile', 'href' => 'profile.php']
+    ],
+    'owner' => [
+        ['text' => 'Home', 'href' => 'main.php'],
+        ['text' => 'About Us', 'href' => 'aboutUs.php'],
+        ['text' => 'My Flats', 'href' => 'myFlats.php'],
+        ['text' => 'Offer Flat for Rent', 'href' => 'offerFlat.php'],
+        ['text' => 'View Messages', 'href' => 'viewMessages.php'],
+        ['text' => 'Profile', 'href' => 'profile.php']
+    ],
+    'manager' => [
+        ['text' => 'Home', 'href' => 'main.php'],
+        ['text' => 'About Us', 'href' => 'aboutUs.php'],
+        ['text' => 'Flats Inquire', 'href' => 'flatsInquire.php'],
+        ['text' => 'View Messages', 'href' => 'viewMessages.php'],
+        ['text' => 'Profile', 'href' => 'profile.php']
+    ]
+];
 ?>
 
 <nav class="site-nav">
-
     <ul>
-        <li><a href="main.php" class="<?php echo $current_page === 'main.php' ? 'active' : ''; ?>">Home</a></li>
-        <li><a href="flatSearch.php" class="<?php echo $current_page === 'flatSearch.php' ? 'active' : ''; ?>">Flat Search</a></li>
-        <li><a href="viewMessages.php" class="<?php echo $current_page === 'viewMessages.php' ? 'active' : ''; ?>">View Messages</a></li>
-        <li><a href="aboutUs.php" class="<?php echo $current_page === 'aboutUs.php' ? 'active' : ''; ?>">About Us</a></li>
-        <li><a href="Step1_Registration.php" class="<?php echo $current_page === 'register.php' ? 'active' : ''; ?>">Register</a></li>
-        <li><a href="login.php" class="<?php echo $current_page === 'login.php' ? 'active' : ''; ?>">Login</a></li>
+        <?php foreach ($nav_links[$user_role] as $link): ?>
+            <li>
+                <a href="<?php echo $link['href']; ?>" class="<?php echo $current_page === $link['href'] ? 'active' : ''; ?>">
+                    <?php echo $link['text']; ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
     </ul>
-
 </nav>

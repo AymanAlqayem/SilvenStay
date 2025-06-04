@@ -1,4 +1,44 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once 'dbconfig.inc.php';
+
+// Get PDO connection
+$pdo = getPDOConnection();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+    // Validate input
+    if (empty($email) || empty($password)) {
+        $_SESSION['login_error'] = "Please fill in all fields.";
+    } else {
+        try {
+            // Check user credentials using email and plain text password
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
+            $stmt->execute([
+                'email' => $email,
+                'password' => $password
+            ]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user) {
+                // Successful login
+                $_SESSION['is_registered'] = true;
+                $_SESSION['user_type'] = $user['user_type'];
+                $_SESSION['step1']['name'] = $user['name'];
+                $_SESSION['user_id'] = $user['user_id'];
+                header("Location: main.php");
+                exit;
+            } else {
+                $_SESSION['login_error'] = "Invalid email or password.";
+            }
+        } catch (PDOException $e) {
+            $_SESSION['login_error'] = "Database error: " . $e->getMessage();
+        }
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,8 +72,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required
                        placeholder="Enter your password">
-                <span class="toggle-password">
-                    </span>
+                <span class="toggle-password"></span>
             </section>
 
             <section class="form-options">

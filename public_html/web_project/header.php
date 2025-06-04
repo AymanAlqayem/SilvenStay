@@ -3,6 +3,31 @@
 $show_card = isset($_POST['toggle_card']) && $_POST['toggle_card'] === 'show' ? 'show' : '';
 // Get username from session if available, else default to 'Guest'
 $username = isset($_SESSION['step1']['name']) && !empty($_SESSION['step1']['name']) ? htmlspecialchars($_SESSION['step1']['name']) : 'Guest';
+// Determine user role from session, default to 'guest' if not set
+$user_role = isset($_SESSION['user_type']) ? strtolower($_SESSION['user_type']) : 'guest';
+
+// Define header links based on user role
+$header_links = [
+    'guest' => [
+        ['text' => 'Contact Us', 'href' => 'contact-us.php'],
+        ['text' => 'Register', 'href' => 'Step1_Registration.php'],
+        ['text' => 'Login', 'href' => 'login.php']
+    ],
+    'customer' => [
+        ['text' => 'Contact Us', 'href' => 'contact-us.php'],
+        ['text' => 'Login', 'href' => 'login.php'],
+        ['text' => 'Logout', 'href' => 'logout.php']
+    ],
+    'owner' => [
+        ['text' => 'Contact Us', 'href' => 'contact-us.php'],
+        ['text' => 'Login', 'href' => 'login.php'],
+        ['text' => 'Logout', 'href' => 'logout.php']
+    ],
+    'manager' => [
+        ['text' => 'Login', 'href' => 'login.php'],
+        ['text' => 'Logout', 'href' => 'logout.php']
+    ]
+];
 ?>
 
 <header class="site-header">
@@ -13,13 +38,12 @@ $username = isset($_SESSION['step1']['name']) && !empty($_SESSION['step1']['name
 
     <section class="header-links">
         <section class="auth-links">
-            <a href="contact-us.php" class="auth-link">Contact Us</a>
-            <a href="Step1_Registration.php" class="auth-link">Register</a>
-            <a href="login.php" class="auth-link">Login</a>
-            <a href="logout.php" class="auth-link">Logout</a>
+            <?php foreach ($header_links[$user_role] as $link): ?>
+                <a href="<?php echo $link['href']; ?>" class="auth-link"><?php echo $link['text']; ?></a>
+            <?php endforeach; ?>
         </section>
 
-        <?php if (isset($_SESSION['is_registered']) && $_SESSION['is_registered'] === true): ?>
+        <?php if (isset($_SESSION['is_registered']) && $_SESSION['is_registered'] === true && $_SESSION['user_type'] === 'customer'): ?>
             <section class="basket-link">
                 <button>
                     <img src="images/basket.png" alt="basket image" class="basket-image">
@@ -27,19 +51,21 @@ $username = isset($_SESSION['step1']['name']) && !empty($_SESSION['step1']['name
             </section>
         <?php endif; ?>
 
-        <section class="user-card">
-            <form method="POST" class="profile-form">
-                <input type="hidden" name="toggle_card" value="<?php echo $show_card === 'show' ? '' : 'show'; ?>">
-                <button type="submit" class="profile-icon-button">
-                    <img src="images/profileIcon.png" alt="Profile Icon" class="profile-icon">
-                </button>
-            </form>
+        <?php if (isset($_SESSION['is_registered']) && $_SESSION['is_registered'] === true): ?>
+            <section class="user-card">
+                <form method="POST" class="profile-form">
+                    <input type="hidden" name="toggle_card" value="<?php echo $show_card === 'show' ? '' : 'show'; ?>">
+                    <button type="submit" class="profile-icon-button">
+                        <img src="images/profileIcon.png" alt="Profile Icon" class="profile-icon">
+                    </button>
+                </form>
 
-            <section class="user-card-info <?php echo $show_card; ?>">
-                <img src="images/profileIcon.png" alt="User Photo" class="user-photo">
-                <span class="username"><?php echo $username; ?></span>
-                <a href="profile.php" class="profile-link">View Profile</a>
+                <section class="user-card-info <?php echo $show_card; ?>">
+                    <img src="images/profileIcon.png" alt="User Photo" class="user-photo">
+                    <span class="username"><?php echo $username; ?></span>
+                    <a href="profile.php" class="profile-link">View Profile</a>
+                </section>
             </section>
-        </section>
+        <?php endif; ?>
     </section>
 </header>
