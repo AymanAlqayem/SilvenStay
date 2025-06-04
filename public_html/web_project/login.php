@@ -1,4 +1,5 @@
 <?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,10 +14,9 @@
             <p>Please login to your account</p>
         </article>
 
-        <form action="authenticate.php" method="POST" class="login-form">
+        <form action="login.php" method="POST" class="login-form">
             <?php if (isset($_SESSION['login_error'])): ?>
                 <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
                     <?= htmlspecialchars($_SESSION['login_error']); ?>
                     <?php unset($_SESSION['login_error']); ?>
                 </div>
