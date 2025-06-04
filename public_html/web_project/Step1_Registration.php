@@ -1,5 +1,25 @@
 <?php
 session_start();
+
+// Save form data to session on POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '1') {
+    $_SESSION['step1'] = [
+        'national_id' => $_POST['national_id'] ?? '',
+        'name' => $_POST['name'] ?? '',
+        'flat_no' => $_POST['flat_no'] ?? '',
+        'street' => $_POST['street'] ?? '',
+        'city' => $_POST['city'] ?? '',
+        'postal_code' => $_POST['postal_code'] ?? '',
+        'dob' => $_POST['dob'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'mobile' => $_POST['mobile'] ?? '',
+        'telephone' => $_POST['telephone'] ?? ''
+    ];
+    // Ensure session data is written before redirect
+    session_write_close();
+    header("Location: Step2_AccountCreation.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +46,7 @@ session_start();
                 <h1>Personal Details</h1>
             </header>
 
-            <form action="AccountCreation.php" method="POST" class="registration-form">
+            <form action="Step1_Registration.php" method="POST" class="registration-form">
                 <input type="hidden" name="step" value="1">
 
                 <fieldset class="form-group">

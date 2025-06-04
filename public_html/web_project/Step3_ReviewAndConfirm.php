@@ -1,28 +1,20 @@
 <?php
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $_SESSION['step2'] = $_POST;
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '3') {
     if ($_SESSION['step2']['password'] !== $_SESSION['step2']['confirm_password']) {
         echo "<p style='color:red;'>Error: Passwords do not match.</p>";
-        echo "<a href='AccountCreation.php'>← Back</a>";
+        echo "<a href='Step2_AccountCreation.php'>← Back</a>";
         exit;
     }
 
     $customerID = str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT);
     $_SESSION['customer_id'] = $customerID;
+    $_SESSION['is_registered'] = true;
 
-    echo "<div class='content-wrapper'>";
-    echo "<main class='site-main'>";
-    echo "<section class='registration-container'>";
-    echo "<h2>Registration Complete!</h2>";
-    echo "<p>Welcome, <strong>" . htmlspecialchars($_SESSION['step1']['name']) . "</strong></p>";
-    echo "<p>Your Customer ID is: <strong>" . $customerID . "</strong></p>";
-    echo "</section>";
-    echo "</main>";
-    echo "</div>";
-    session_destroy();
+    // Ensure session data is written before redirect
+    session_write_close();
+    header("Location: main.php");
     exit;
 }
 ?>
@@ -52,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p>Please verify all details before submission</p>
             </header>
 
-            <form action="ReviewAndConfirm.php" method="POST" class="registration-form">
+            <form action="Step3_ReviewAndConfirm.php" method="POST" class="registration-form">
                 <input type="hidden" name="step" value="3">
 
                 <section class="form-section">
@@ -76,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <span class="review-icon">🏠</span>
                             <div class="review-content">
                                 <dt>Address</dt>
-                                <dd><?= htmlspecialchars($_SESSION['step1']['flat_no'] . ', ' . $_SESSION['step1']['street'] . ', ' . $_SESSION['step1']['city'] . ', ' . $_SESSION['step1']['postal_code']) ?></dd>
+                                <dd><?= htmlspecialchars(($_SESSION['step1']['flat_no'] ?? '') . ', ' . ($_SESSION['step1']['street'] ?? '') . ', ' . ($_SESSION['step1']['city'] ?? '') . ', ' . ($_SESSION['step1']['postal_code'] ?? '')) ?></dd>
                             </div>
                         </div>
                         <div class="review-item">
@@ -116,17 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h2 class="form-section-title">Account Details</h2>
                     <div class="review-group">
                         <div class="review-item">
-                            <span class="review-icon">👤</span>
+                            <span class="review-icon">📧</span>
                             <div class="review-content">
-                                <dt>Username</dt>
-                                <dd><?= htmlspecialchars($_SESSION['step2']['username'] ?? '') ?></dd>
+                                <dt>Email</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section class="form-actions">
-                    <button type="button" class="btn btn-back" onclick="window.location.href='AccountCreation.php'">← Back</button>
+                    <button type="button" class="btn btn-back" onclick="window.location.href='Step2_AccountCreation.php'">←
+                        Back
+                    </button>
                     <button type="submit" class="btn btn-confirm">Confirm Registration</button>
                 </section>
             </form>

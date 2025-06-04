@@ -2,45 +2,38 @@
 session_start();
 
 $error = '';
-$username = '';
-$password = '';
-$confirm_password = '';
+
+// Initialize form fields
+$email = $_SESSION['step2']['email'] ?? ($_SESSION['step1']['email'] ?? '');
+$password = $_SESSION['step2']['password'] ?? '';
+$confirm_password = $_SESSION['step2']['confirm_password'] ?? '';
 
 // Handle POST submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '2') {
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // Save username and passwords temporarily for repopulating fields
-    $_SESSION['step2']['username'] = $username;
-    $_SESSION['step2']['password'] = $password;
-    $_SESSION['step2']['confirm_password'] = $confirm_password;
+    // Save form data to session
+    $_SESSION['step2'] = [
+        'email' => $email,
+        'password' => $password,
+        'confirm_password' => $confirm_password
+    ];
 
     $pattern = '/^[0-9].{4,13}[a-z]$/';
 
     if (!preg_match($pattern, $password)) {
-        // Do nothing; just stay silently on the page (no error shown for this case)
+        $error = "Password must be 6–15 characters, start with a digit, and end with a lowercase letter.";
     } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match.";
     } else {
-        // Valid case
-        $_SESSION['step2']['password'] = $password;
-        $_SESSION['step2']['confirm_password'] = $confirm_password;
-        header("Location: ReviewAndConfirm.php");
+        // Ensure session data is written before redirect
+        session_write_close();
+        header("Location: Step3_ReviewAndConfirm.php");
         exit;
     }
 }
-
-// If coming in fresh, try to fill the username with step1 email
-if (empty($_SESSION['step2']['username']) && isset($_SESSION['step1']['email'])) {
-    $username = $_SESSION['step1']['email'];
-} else {
-    $username = $_SESSION['step2']['username'] ?? '';
-}
-
-$password = $_SESSION['step2']['password'] ?? '';
-$confirm_password = $_SESSION['step2']['confirm_password'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +60,7 @@ $confirm_password = $_SESSION['step2']['confirm_password'] ?? '';
                 <h1>Create Your E-Account</h1>
             </header>
 
-            <form action="AccountCreation.php" method="POST" class="registration-form">
+            <form action="Step2_AccountCreation.php" method="POST" class="registration-form">
                 <input type="hidden" name="step" value="2">
 
                 <?php if (!empty($error)): ?>
@@ -75,9 +68,9 @@ $confirm_password = $_SESSION['step2']['confirm_password'] ?? '';
                 <?php endif; ?>
 
                 <fieldset class="form-group">
-                    <label for="username" class="form-label required">Username (Email)</label>
-                    <input type="email" id="username" name="username" class="form-input" required
-                           value="<?= htmlspecialchars($username) ?>">
+                    <label for="email" class="form-label required">Email</label>
+                    <input type="email" id="email" name="email" class="form-input" required
+                           value="<?= htmlspecialchars($email) ?>">
                     <small class="form-hint">This will be your login ID</small>
                 </fieldset>
 

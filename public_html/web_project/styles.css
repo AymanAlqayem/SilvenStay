@@ -1,7 +1,6 @@
 /* ==========================================================================
-   Reset and Base Styles
+   Base Styles
    ========================================================================== */
-/* Purpose: Normalize browser defaults and set global styles for consistency. */
 * {
     margin: 0;
     padding: 0;
@@ -372,8 +371,11 @@ p, a, span, li {
 }
 
 
-/* Contact Us Page (contact-us.php).
-   -------------------------------- */
+/*
+
+====================================================================
+    Contact Us Page (contact-us.php).
+==================================================================== */
 .contact-main {
     background-color: #f9f7f3;
     padding: 2rem;
@@ -692,8 +694,10 @@ p, a, span, li {
 }
 
 
-/* About Us Page (aboutUs.php)
-   -------------------------------- */
+/*
+============================================================
+About Us Page (aboutUs.php)
+============================================================ */
 
 .about-hero {
     display: flex;
@@ -719,7 +723,6 @@ p, a, span, li {
     opacity: 0.9;
     color: #f9f7f3;
 }
-
 
 .mission-section {
     display: grid;
@@ -814,7 +817,6 @@ p, a, span, li {
     margin-top: 1.5rem;
 }
 
-
 .timeline-section {
     margin: 4rem 0;
     text-align: center;
@@ -837,7 +839,6 @@ p, a, span, li {
     left: 50%;
     margin-left: -1px;
 }
-
 
 /* items positioned */
 .timeline-item {
@@ -880,7 +881,6 @@ time {
     font-weight: bold;
     color: #B79C67;
 }
-
 
 .team-section {
     max-width: 700px;
@@ -1159,8 +1159,11 @@ time {
     color: #d4b985;
 }
 
-
-/* Registration Container */
+/*
+==================================================
+    Register Design.
+==================================================
+ */
 .registration-container {
     max-width: 800px;
     margin: 30px auto;
@@ -1382,7 +1385,333 @@ input[type=number] {
 }
 
 
+/* Message styling for login/logout/profile notifications */
+.message {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-align: center;
+    color: #d32f2f;
+}
 
+/* Style for disabled/read-only inputs */
+input[readonly] {
+    background: #f5f5f5;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* Error message (default) */
+.message.error {
+    color: #d32f2f;
+}
+
+/* Success message */
+.message.success {
+    color: #2e7d32;
+}
+
+/*
+==================================================
+    Profile Design
+==================================================
+ */
+
+/* Profile Page Specific Styles */
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2d3748;
+}
+
+.profile-info p {
+    margin: 5px 0 0;
+    color: #718096;
+}
+
+.form-section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    color: #4a6bff;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.form-section-title i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+    margin-top: 20px;
+}
+
+.btn-change-password {
+    background: #f0f4f8;
+    color: #4a6bff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-change-password:hover {
+    background: #e2e8f0;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+.input-icon input {
+    padding-left: 45px;
+}
+
+/*
+===================================================
+    Login Design.
+===================================================
+ */
+
+/* Login Page Styles */
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-left {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+}
+
+.login-right {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.login-header h1 {
+    font-size: 2.5rem;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #718096;
+    font-size: 1.1rem;
+}
+
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.input-group input::placeholder {
+    color: #a0aec0;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    color: #4a5568;
+}
+
+.remember-me input {
+    margin-right: 8px;
+}
+
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 25px;
+}
+
+.btn-login:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+
+.register-link {
+    text-align: center;
+    color: #4a5568;
+}
+
+.register-link a {
+    color: #667eea;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.welcome-message {
+    max-width: 400px;
+    text-align: center;
+}
+
+.welcome-message h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.welcome-message p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.btn-register {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-register:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.alert-error {
+    background: #fff5f5;
+    color: #e53e3e;
+    border-left: 4px solid #e53e3e;
+}
 
 
 

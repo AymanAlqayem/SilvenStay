@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +13,17 @@
 <body>
 <?php include 'header.php'; ?>
 
-<section class="content-wrapper">
+<div class="content-wrapper">
     <?php include 'nav.php'; ?>
 
     <main class="site-main">
+        <?php if (isset($_SESSION['message'])): ?>
+            <section class="message">
+                <p><?= htmlspecialchars($_SESSION['message']) ?></p>
+                <?php unset($_SESSION['message']); ?>
+            </section>
+        <?php endif; ?>
+
         <section class="promotional">
             <h2>Featured Properties</h2>
 
@@ -40,14 +51,10 @@
                         <button>View Details</button>
                     </figcaption>
                 </figure>
-
             </article>
         </section>
-
     </main>
-
-</section>
-
+</div>
 
 <?php include 'footer.php'; ?>
 </body>
