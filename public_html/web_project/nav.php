@@ -16,7 +16,7 @@ $nav_links = [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
         ['text' => 'Search', 'href' => 'flatSearch.php'],
-        ['text' => 'View Rented Flats', 'href' => 'viewRentedFlats.php'],
+        ['text' => 'View Rented Flats', 'href' => 'viewRentedFlat.php'],
         ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']
     ],

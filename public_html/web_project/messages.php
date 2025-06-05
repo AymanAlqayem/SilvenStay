@@ -33,73 +33,83 @@ try {
 
 } catch (PDOException $e) {
     error_log("Database error: " . $e->getMessage());
-    die("Database error: " . $e->getMessage());
+    die("Database error: " . htmlspecialchars($e->getMessage()));
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Messages Inbox</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Messages Inbox | SilvenStay</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="messages-container">
-    <div class="messages-header">
-        <h2>Inbox for User ID: <?php echo htmlspecialchars($userId); ?></h2>
-        <div class="messages-controls">
-            <form class="search-form" method="GET" action="">
-                <input
-                        type="text"
-                        name="search"
-                        placeholder="Search messages..."
-                        value="<?php echo htmlspecialchars($search); ?>"
-                        autocomplete="off"
-                />
-            </form>
-        </div>
-    </div>
+<?php include 'header.php'; ?>
+<?php include 'nav.php'; ?>
 
-    <?php if (empty($messages)): ?>
-        <div class="empty-messages">
-            <div class="empty-icon">📭</div>
-            <h3>No messages found</h3>
-            <p>You have no messages at the moment.</p>
+<section class="content-wrapper">
+    <main class="site-main">
+        <div class="messages-container">
+            <div class="messages-header">
+                <h2>Inbox for User ID: <?php echo htmlspecialchars($userId); ?></h2>
+                <div class="messages-controls">
+                    <form class="search-form" method="GET" action="">
+                        <input
+                                type="text"
+                                name="search"
+                                placeholder="Search messages..."
+                                value="<?php echo htmlspecialchars($search); ?>"
+                                autocomplete="off"
+                        />
+                    </form>
+                </div>
+            </div>
+
+            <?php if (empty($messages)): ?>
+                <div class="empty-messages">
+                    <div class="empty-icon">📭</div>
+                    <h3>No messages found</h3>
+                    <p>You have no messages at the moment.</p>
+                </div>
+            <?php else: ?>
+                <table class="messages-table">
+                    <thead>
+                    <tr>
+                        <th class="sortable">Title</th>
+                        <th class="sortable">Date</th>
+                        <th class="sortable">Sender</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($messages as $msg): ?>
+                        <tr class="<?php echo !$msg['is_read'] ? 'unread' : ''; ?>">
+                            <td class="message-title">
+                                <?php echo htmlspecialchars($msg['title']); ?>
+                            </td>
+                            <td class="message-date">
+                                <?php echo date('Y-m-d H:i', strtotime($msg['sent_date'])); ?>
+                            </td>
+                            <td class="message-sender">
+                                <?php echo htmlspecialchars($msg['sender']); ?>
+                            </td>
+                            <td class="message-preview">
+                                <?php
+                                $preview = strip_tags($msg['message_body']);
+                                echo htmlspecialchars(mb_strimwidth($preview, 0, 120, '...'));
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
         </div>
-    <?php else: ?>
-        <table class="messages-table">
-            <thead>
-            <tr>
-                <th class="sortable">Title</th>
-                <th class="sortable">Date</th>
-                <th class="sortable">Sender</th>
-                <th>Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($messages as $msg): ?>
-                <tr class="<?php echo !$msg['is_read'] ? 'unread' : ''; ?>">
-                    <td class="message-title">
-                        <?php echo htmlspecialchars($msg['title']); ?>
-                    </td>
-                    <td class="message-date">
-                        <?php echo date('Y-m-d H:i', strtotime($msg['sent_date'])); ?>
-                    </td>
-                    <td class="message-sender">
-                        <?php echo htmlspecialchars($msg['sender']); ?>
-                    </td>
-                    <td class="message-preview">
-                        <?php
-                        $preview = strip_tags($msg['message_body']);
-                        echo htmlspecialchars(mb_strimwidth($preview, 0, 120, '...'));
-                        ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
-</div>
+    </main>
+</section>
+
+<?php include 'footer.php'; ?>
 </body>
 </html>
