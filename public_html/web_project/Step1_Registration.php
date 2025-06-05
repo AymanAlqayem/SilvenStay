@@ -1,12 +1,34 @@
 <?php
 session_start();
 
+require_once 'dbconfig.inc.php';
+
 // Initialize form fields
 $step1 = $_SESSION['step1'] ?? [];
 $user_type = $_SESSION['user_type'] ?? 'Customer';
 
 // Handle POST submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '1') {
+    // Store all form values in session even if validation fails
+    $step1 = [
+        'national_id' => $_POST['national_id'] ?? '',
+        'name' => $_POST['name'] ?? '',
+        'flat_no' => $_POST['flat_no'] ?? '',
+        'street' => $_POST['street'] ?? '',
+        'city' => $_POST['city'] ?? '',
+        'postal_code' => $_POST['postal_code'] ?? '',
+        'dob' => $_POST['dob'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'mobile' => $_POST['mobile'] ?? '',
+        'telephone' => $_POST['telephone'] ?? '',
+        'bank_name' => $_POST['bank_name'] ?? '',
+        'bank_branch' => $_POST['bank_branch'] ?? '',
+        'bank_account' => $_POST['bank_account'] ?? ''
+    ];
+    $_SESSION['step1'] = $step1;
+    $_SESSION['user_type'] = $_POST['user_type'] ?? 'Customer';
+    $user_type = $_SESSION['user_type'];
+
     // Validate required fields
     $required_fields = [
         'national_id', 'name', 'flat_no', 'street', 'city',
@@ -30,23 +52,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         }
     }
 
-    if (empty($errors)) {
-        $_SESSION['user_type'] = $_POST['user_type'] ?? 'Customer';
-        $_SESSION['step1'] = [
-            'national_id' => $_POST['national_id'],
-            'name' => $_POST['name'],
-            'flat_no' => $_POST['flat_no'],
-            'street' => $_POST['street'],
-            'city' => $_POST['city'],
-            'postal_code' => $_POST['postal_code'],
-            'dob' => $_POST['dob'],
-            'email' => $_POST['email'],
-            'mobile' => $_POST['mobile'],
-            'telephone' => $_POST['telephone'] ?? '',
-            'bank_name' => $_POST['bank_name'] ?? '',
-            'bank_branch' => $_POST['bank_branch'] ?? '',
-            'bank_account' => $_POST['bank_account'] ?? ''
-        ];
+    // Check email uniqueness
+    $email = $_POST['email'] ?? '';
+    $email_error = '';
+    if (!empty($email)) {
+        try {
+            $pdo = getPDOConnection();
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetchColumn() > 0) {
+                $email_error = "This email is already registered";
+                // Clear only the email field in the session
+                $_SESSION['step1']['email'] = '';
+            }
+        } catch (PDOException $e) {
+            $email_error = "Database error occurred";
+            $_SESSION['step1']['email'] = '';
+        }
+    }
+
+    if (empty($errors) && empty($email_error)) {
         header("Location: Step2_AccountCreation.php");
         exit;
     }
@@ -75,6 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             <header>
                 <h1>Personal Details</h1>
             </header>
+
+            <?php if (!empty($email_error)): ?>
+                <div class="alert alert-error">
+                    <span class="alert-icon">⚠</span>
+                    <span><?= htmlspecialchars($email_error) ?></span>
+                    <span class="alert-close" onclick="this.parentElement.style.display='none';">×</span>
+                </div>
+            <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
                 <div class="error-message">
@@ -201,6 +234,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             bankInputs.forEach(input => input.required = false);
         }
     }
+
+    // Initialize bank details visibility on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleBankDetails();
+    });
 </script>
 
 <?php include 'footer.php'; ?>

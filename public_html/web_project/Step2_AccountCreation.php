@@ -22,27 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format";
     } else {
-        // Check email uniqueness (pseudo-code - implement your database check)
-        $email_exists = false; // Replace with actual database check
+        $pattern = '/^[0-9].{4,13}[a-z]$/';
 
-        if ($email_exists) {
-            $error = "Email is already registered";
+        if (!preg_match($pattern, $password)) {
+            $error = "Password must be 6–15 characters, start with a digit, and end with a lowercase letter";
+        } elseif ($password !== $confirm_password) {
+            $error = "Passwords do not match";
         } else {
-            $pattern = '/^[0-9].{4,13}[a-z]$/';
-
-            if (!preg_match($pattern, $password)) {
-                $error = "Password must be 6–15 characters, start with a digit, and end with a lowercase letter";
-            } elseif ($password !== $confirm_password) {
-                $error = "Passwords do not match";
-            } else {
-                $_SESSION['step2'] = [
-                    'email' => $email,
-                    'password' => $password,
-                    'confirm_password' => $confirm_password
-                ];
-                header("Location: Step3_ReviewAndConfirm.php");
-                exit;
-            }
+            $_SESSION['step2'] = [
+                'email' => $email,
+                'password' => $password,
+                'confirm_password' => $confirm_password
+            ];
+            header("Location: Step3_ReviewAndConfirm.php");
+            exit;
         }
     }
 }
