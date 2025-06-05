@@ -47,9 +47,9 @@ $header_links = [
 
         <?php if (isset($_SESSION['is_registered']) && $_SESSION['is_registered'] === true && isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'customer'): ?>
             <section class="basket-link">
-                <button>
+                <a href="basket.php">
                     <img src="images/basket.png" alt="basket image" class="basket-image">
-                </button>
+                </a>
             </section>
         <?php endif; ?>
 
