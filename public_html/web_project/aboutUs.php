@@ -88,7 +88,7 @@
 
             <div class="profile-card">
                 <div class="profile-photo">
-                    <img src="images/Ayman.jpg" alt="Ayman Alqayem">
+                    <img src="images/Ayman.jpg" alt="Ayman Alqayem" loading="lazy">
                 </div>
                 <div class="profile-info">
                     <h3>Ayman Alqayem</h3>
