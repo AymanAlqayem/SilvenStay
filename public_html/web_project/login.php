@@ -27,7 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['is_registered'] = true;
                 $_SESSION['user_type'] = $user['user_type'];
                 $_SESSION['step1']['name'] = $user['name'];
-                $_SESSION['user_id'] = $user['user_id'];
+                if ($user['user_type'] === 'customer') {
+                    $_SESSION['user_id'] = $user['customer_id'];
+                } elseif ($user['user_type'] === 'owner') {
+                    $_SESSION['user_id'] = $user['owner_id'];
+                } elseif ($user['user_type'] === 'manager') {
+                    $_SESSION['user_id'] = $user['manager_id'];
+                }
                 header("Location: main.php");
                 exit;
             } else {

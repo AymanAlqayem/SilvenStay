@@ -32,21 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         $owner_id = $user_type === 'owner' ? $generated_id : null;
         $manager_id = $user_type === 'manager' ? $generated_id : null;
 
-        // Use email as username
-        $username = $_SESSION['step2']['email'];
-
         $stmt = $pdo->prepare("
             INSERT INTO users (
                 national_id, name, flat_no, street, city, postal_code, 
                 date_of_birth, email, mobile_number, telephone_number,
                 bank_name, bank_branch, account_number,
-                username, password, user_type,
+                password, user_type,
                 customer_id, owner_id, manager_id, profile_photo
             ) VALUES (
                 :national_id, :name, :flat_no, :street, :city, :postal_code, 
                 :date_of_birth, :email, :mobile_number, :telephone_number,
                 :bank_name, :bank_branch, :account_number,
-                :username, :password, :user_type,
+                :password, :user_type,
                 :customer_id, :owner_id, :manager_id, :profile_photo
             )
         ");
@@ -65,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             ':bank_name' => $_SESSION['step1']['bank_name'] ?? null,
             ':bank_branch' => $_SESSION['step1']['bank_branch'] ?? null,
             ':account_number' => $_SESSION['step1']['bank_account'] ?? null,
-            ':username' => $username,
             ':password' => password_hash($_SESSION['step2']['password'], PASSWORD_DEFAULT),
             ':user_type' => $user_type,
             ':customer_id' => $customer_id,
@@ -74,17 +70,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             ':profile_photo' => null
         ]);
 
-        // Store confirmation details
-        $_SESSION['user_id'] = $generated_id;
-        $_SESSION['is_registered'] = true;
-        $confirmation_message = "Registration successful! Welcome, " . htmlspecialchars($_SESSION['step1']['name']) .
-            ". Your " . ($user_type === 'customer' ? 'Customer' : ($user_type === 'owner' ? 'Owner' : 'Manager')) .
-            " ID is: " . $generated_id;
+        // Store confirmation details in session for use in registration_success.php
+        $_SESSION['registration_success'] = [
+            'name' => $_SESSION['step1']['name'],
+            'user_type' => $user_type,
+            'user_id' => $generated_id
+        ];
 
         // Clear session data after successful registration
         unset($_SESSION['step1']);
         unset($_SESSION['step2']);
         unset($_SESSION['user_type']);
+
+        // Redirect to registration_success.php
+        header("Location: registration_success.php");
+        exit;
 
     } catch (PDOException $e) {
         die("Database error: " . $e->getMessage());
@@ -109,149 +109,135 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             <nav class="progress-steps" aria-label="Registration progress">
                 <span class="step completed">✓</span>
                 <span class="step completed">✓</span>
-                <span class="step <?= !empty($confirmation_message) ? 'completed' : 'active' ?>"> <?= !empty($confirmation_message) ? '✓' : '3' ?></span>
+                <span class="step active">3</span>
             </nav>
 
-            <?php if (!empty($confirmation_message)): ?>
-                <article class="confirmation-message">
-                    <?= $confirmation_message ?>
-                    <br><a href="login.php" class="btn btn-next">Proceed to Login</a>
-                </article>
-            <?php else: ?>
-                <header>
-                    <h1>Review Your Information</h1>
-                    <p>Please verify all details before submission</p>
-                </header>
+            <header>
+                <h1>Review Your Information</h1>
+                <p>Please verify all details before submission</p>
+            </header>
 
-                <form action="Step3_ReviewAndConfirm.php" method="POST" class="registration-form">
-                    <input type="hidden" name="step" value="3">
+            <form action="Step3_ReviewAndConfirm.php" method="POST" class="registration-form">
+                <input type="hidden" name="step" value="3">
 
+                <section class="form-section">
+                    <h2 class="form-section-title">Personal Details</h2>
+                    <section class="review-group">
+                        <section class="review-item">
+                            <span class="review-icon">👤</span>
+                            <div class="review-content">
+                                <dt>User Type</dt>
+                                <dd><?= htmlspecialchars($_SESSION['user_type'] ?? 'Customer') ?></dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">🪪</span>
+                            <div class="review-content">
+                                <dt>National ID</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step1']['national_id'] ?? '') ?></dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">👤</span>
+                            <div class="review-content">
+                                <dt>Full Name</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step1']['name'] ?? '') ?></dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">🏠</span>
+                            <div class="review-content">
+                                <dt>Address</dt>
+                                <dd>
+                                    <?= htmlspecialchars($_SESSION['step1']['flat_no'] ?? '') ?>,
+                                    <?= htmlspecialchars($_SESSION['step1']['street'] ?? '') ?>,
+                                    <?= htmlspecialchars($_SESSION['step1']['city'] ?? '') ?>,
+                                    <?= htmlspecialchars($_SESSION['step1']['postal_code'] ?? '') ?>
+                                </dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">🎂</span>
+                            <div class="review-content">
+                                <dt>Date of Birth</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step1']['dob'] ?? '') ?></dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">📧</span>
+                            <div class="review-content">
+                                <dt>Email (for login)</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
+                            </div>
+                        </section>
+                        <section class="review-item">
+                            <span class="review-icon">📱</span>
+                            <div class="review-content">
+                                <dt>Mobile</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step1']['mobile'] ?? '') ?></dd>
+                            </div>
+                        </section>
+                        <?php if (!empty($_SESSION['step1']['telephone'])): ?>
+                            <section class="review-item">
+                                <span class="review-icon">☎️</span>
+                                <div class="review-content">
+                                    <dt>Telephone</dt>
+                                    <dd><?= htmlspecialchars($_SESSION['step1']['telephone'] ?? '') ?></dd>
+                                </div>
+                            </section>
+                        <?php endif; ?>
+                    </section>
+                </section>
+
+                <?php if (strtolower($_SESSION['user_type'] ?? 'customer') === 'owner'): ?>
                     <section class="form-section">
-                        <h2 class="form-section-title">Personal Details</h2>
+                        <h2 class="form-section-title">Bank Details</h2>
                         <section class="review-group">
                             <section class="review-item">
-                                <span class="review-icon">👤</span>
+                                <span class="review-icon">🏦</span>
                                 <div class="review-content">
-                                    <dt>User Type</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['user_type'] ?? 'Customer') ?></dd>
+                                    <dt>Bank Name</dt>
+                                    <dd><?= htmlspecialchars($_SESSION['step1']['bank_name'] ?? '') ?></dd>
                                 </div>
                             </section>
                             <section class="review-item">
-                                <span class="review-icon">🪪</span>
+                                <span class="review-icon">🏦</span>
                                 <div class="review-content">
-                                    <dt>National ID</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step1']['national_id'] ?? '') ?></dd>
+                                    <dt>Bank Branch</dt>
+                                    <dd><?= htmlspecialchars($_SESSION['step1']['bank_branch'] ?? '') ?></dd>
                                 </div>
                             </section>
                             <section class="review-item">
-                                <span class="review-icon">👤</span>
+                                <span class="review-icon">💳</span>
                                 <div class="review-content">
-                                    <dt>Full Name</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step1']['name'] ?? '') ?></dd>
-                                </div>
-                            </section>
-                            <section class="review-item">
-                                <span class="review-icon">🏠</span>
-                                <div class="review-content">
-                                    <dt>Address</dt>
-                                    <dd>
-                                        <?= htmlspecialchars($_SESSION['step1']['flat_no'] ?? '') ?>,
-                                        <?= htmlspecialchars($_SESSION['step1']['street'] ?? '') ?>,
-                                        <?= htmlspecialchars($_SESSION['step1']['city'] ?? '') ?>,
-                                        <?= htmlspecialchars($_SESSION['step1']['postal_code'] ?? '') ?>
-                                    </dd>
-                                </div>
-                            </section>
-                            <section class="review-item">
-                                <span class="review-icon">🎂</span>
-                                <div class="review-content">
-                                    <dt>Date of Birth</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step1']['dob'] ?? '') ?></dd>
-                                </div>
-                            </section>
-                            <section class="review-item">
-                                <span class="review-icon">📧</span>
-                                <div class="review-content">
-                                    <dt>Email</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
-                                </div>
-                            </section>
-                            <section class="review-item">
-                                <span class="review-icon">📱</span>
-                                <div class="review-content">
-                                    <dt>Mobile</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step1']['mobile'] ?? '') ?></dd>
-                                </div>
-                            </section>
-                            <?php if (!empty($_SESSION['step1']['telephone'])): ?>
-                                <section class="review-item">
-                                    <span class="review-icon">☎️</span>
-                                    <div class="review-content">
-                                        <dt>Telephone</dt>
-                                        <dd><?= htmlspecialchars($_SESSION['step1']['telephone'] ?? '') ?></dd>
-                                    </div>
-                                </section>
-                            <?php endif; ?>
-                        </section>
-                    </section>
-
-                    <?php if (strtolower($_SESSION['user_type'] ?? 'customer') === 'owner'): ?>
-                        <section class="form-section">
-                            <h2 class="form-section-title">Bank Details</h2>
-                            <section class="review-group">
-                                <section class="review-item">
-                                    <span class="review-icon">🏦</span>
-                                    <div class="review-content">
-                                        <dt>Bank Name</dt>
-                                        <dd><?= htmlspecialchars($_SESSION['step1']['bank_name'] ?? '') ?></dd>
-                                    </div>
-                                </section>
-                                <section class="review-item">
-                                    <span class="review-icon">🏦</span>
-                                    <div class="review-content">
-                                        <dt>Bank Branch</dt>
-                                        <dd><?= htmlspecialchars($_SESSION['step1']['bank_branch'] ?? '') ?></dd>
-                                    </div>
-                                </section>
-                                <section class="review-item">
-                                    <span class="review-icon">💳</span>
-                                    <div class="review-content">
-                                        <dt>Account Number</dt>
-                                        <dd><?= htmlspecialchars($_SESSION['step1']['bank_account'] ?? '') ?></dd>
-                                    </div>
-                                </section>
-                            </section>
-                        </section>
-                    <?php endif; ?>
-
-                    <section class="form-section">
-                        <h2 class="form-section-title">Account Details</h2>
-                        <section class="review-group">
-                            <section class="review-item">
-                                <span class="review-icon">📧</span>
-                                <div class="review-content">
-                                    <dt>Login Email</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
-                                </div>
-                            </section>
-                            <section class="review-item">
-                                <span class="review-icon">👤</span>
-                                <div class="review-content">
-                                    <dt>Username</dt>
-                                    <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
+                                    <dt>Account Number</dt>
+                                    <dd><?= htmlspecialchars($_SESSION['step1']['bank_account'] ?? '') ?></dd>
                                 </div>
                             </section>
                         </section>
                     </section>
+                <?php endif; ?>
 
-                    <section class="form-actions">
-                        <button type="button" class="btn btn-back"
-                                onclick="window.location.href='Step2_AccountCreation.php'">← Back
-                        </button>
-                        <button type="submit" class="btn btn-confirm">Confirm Registration</button>
+                <section class="form-section">
+                    <h2 class="form-section-title">Account Details</h2>
+                    <section class="review-group">
+                        <section class="review-item">
+                            <span class="review-icon">📧</span>
+                            <div class="review-content">
+                                <dt>Login Email</dt>
+                                <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
+                            </div>
+                        </section>
                     </section>
-                </form>
-            <?php endif; ?>
+                </section>
+
+                <section class="form-actions">
+                    <button type="button" class="btn btn-back"
+                            onclick="window.location.href='Step2_AccountCreation.php'">← Back
+                    </button>
+                    <button type="submit" class="btn btn-confirm">Confirm Registration</button>
+                </section>
+            </form>
         </section>
     </main>
 </section>

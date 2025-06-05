@@ -17,6 +17,7 @@ $nav_links = [
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
         ['text' => 'Search', 'href' => 'flatSearch.php'],
         ['text' => 'View Rented Flats', 'href' => 'viewRentedFlats.php'],
+        ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']
     ],
     'owner' => [
@@ -24,14 +25,14 @@ $nav_links = [
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
         ['text' => 'My Flats', 'href' => 'myFlats.php'],
         ['text' => 'Offer Flat for Rent', 'href' => 'offerFlat.php'],
-        ['text' => 'View Messages', 'href' => 'viewMessages.php'],
+        ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']
     ],
     'manager' => [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
         ['text' => 'Flats Inquire', 'href' => 'flatsInquire.php'],
-        ['text' => 'View Messages', 'href' => 'viewMessages.php'],
+        ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']
     ]
 ];
@@ -41,7 +42,8 @@ $nav_links = [
     <ul>
         <?php foreach ($nav_links[$user_role] as $link): ?>
             <li>
-                <a href="<?php echo $link['href']; ?>" class="<?php echo $current_page === $link['href'] ? 'active' : ''; ?>">
+                <a href="<?php echo $link['href']; ?>"
+                   class="<?php echo $current_page === $link['href'] ? 'active' : ''; ?>">
                     <?php echo $link['text']; ?>
                 </a>
             </li>

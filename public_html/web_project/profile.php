@@ -2,23 +2,38 @@
 session_start();
 require_once 'dbconfig.inc.php';
 
-if (!isset($_SESSION['is_registered']) || $_SESSION['is_registered'] !== true || !isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['is_registered']) || $_SESSION['is_registered'] !== true || !isset($_SESSION['user_id']) || !isset($_SESSION['user_type'])) {
     $_SESSION['message'] = "You are not logged in.";
-    header("Location: main.php");
+    header("Location: login.php");
     exit;
 }
 
 $pdo = getPDOConnection();
 
+// Determine the ID column based on user_type
+$user_type = $_SESSION['user_type'];
+$id_column = '';
+if ($user_type === 'customer') {
+    $id_column = 'customer_id';
+} elseif ($user_type === 'owner') {
+    $id_column = 'owner_id';
+} elseif ($user_type === 'manager') {
+    $id_column = 'manager_id';
+} else {
+    $_SESSION['message'] = "Invalid user type.";
+    header("Location: login.php");
+    exit;
+}
+
 // Fetch user
 try {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE $id_column = :user_id");
     $stmt->execute(['user_id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         $_SESSION['message'] = "User not found.";
-        header("Location: main.php");
+        header("Location: login.php");
         exit;
     }
 
@@ -42,7 +57,7 @@ try {
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: " . $e->getMessage();
     error_log("Profile fetch failed: " . $e->getMessage());
-    header("Location: main.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -80,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check email uniqueness (excluding current user)
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email AND user_id != :user_id");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email AND $id_column != :user_id");
     $stmt->execute(['email' => $email, 'user_id' => $_SESSION['user_id']]);
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['error_type'] = 'email';
@@ -156,12 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     email = :email, 
                     mobile_number = :mobile, 
                     telephone_number = :telephone, 
-                    username = :username, 
                     bank_name = :bank_name, 
                     bank_branch = :bank_branch, 
                     account_number = :account_number, 
                     profile_photo = :profile_photo
-                 WHERE user_id = :user_id"
+                 WHERE $id_column = :user_id"
             );
             $stmt->execute([
                 'national_id' => $national_id,
@@ -174,7 +188,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'email' => $email,
                 'mobile' => $mobile,
                 'telephone' => $telephone,
-                'username' => $email,
                 'bank_name' => $bank_name,
                 'bank_branch' => $bank_branch,
                 'account_number' => $account_number,
@@ -194,9 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     email = :email, 
                     mobile_number = :mobile, 
                     telephone_number = :telephone, 
-                    username = :username, 
                     profile_photo = :profile_photo
-                 WHERE user_id = :user_id"
+                 WHERE $id_column = :user_id"
             );
             $stmt->execute([
                 'national_id' => $national_id,
@@ -209,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'email' => $email,
                 'mobile' => $mobile,
                 'telephone' => $telephone,
-                'username' => $email,
                 'profile_photo' => $profile_photo,
                 'user_id' => $_SESSION['user_id']
             ]);
@@ -286,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <fieldset class="form-group">
                             <label class="form-label">User ID</label>
                             <input type="text" class="form-input" readonly
-                                   value="<?= htmlspecialchars($user['user_id']) ?>">
+                                   value="<?= htmlspecialchars($_SESSION['user_id']) ?>">
                         </fieldset>
 
                         <?php if ($user['user_type'] === 'customer'): ?>

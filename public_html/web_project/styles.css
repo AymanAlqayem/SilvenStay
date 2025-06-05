@@ -1174,31 +1174,39 @@ time {
     .hero-content h1 {
         font-size: 2rem;
     }
+
     .hero-content p {
         font-size: 1.1rem;
     }
+
     .mission-section {
         gap: 2rem;
         padding: 0 0.5rem;
     }
+
     .mission-card {
         padding: 2rem 1rem;
     }
+
     .mission-card h2 {
         font-size: 1.3rem;
     }
+
     .mission-card figure {
         width: 100px;
         height: 100px;
         padding: 1rem;
     }
+
     .mission-card img {
         max-height: 70px;
     }
+
     .value-card figure {
         width: 90px;
         height: 90px;
     }
+
     .value-card h3 {
         font-size: 1.2rem;
     }
@@ -1208,36 +1216,46 @@ time {
     .about-hero {
         margin-bottom: 2rem;
     }
+
     .hero-content {
         padding: 2rem 1rem;
     }
+
     .hero-content h1 {
         font-size: 1.75rem;
     }
+
     .hero-content p {
         font-size: 1rem;
     }
+
     .mission-section {
         grid-template-columns: 1fr;
         padding: 0 1rem;
     }
+
     .mission-card {
         padding: 2rem 1rem;
     }
+
     .mission-card figure {
         width: 90px;
         height: 90px;
     }
+
     .mission-card img {
         max-height: 60px;
     }
+
     .timeline {
         max-width: 100%;
     }
+
     /* Timeline - stack vertically on mobile */
     .timeline::before {
         left: 8px;
     }
+
     .timeline-item {
         width: 100%;
         padding-left: 30px;
@@ -1245,46 +1263,58 @@ time {
         text-align: left !important;
         left: 0 !important;
     }
+
     .timeline-item::after {
         left: 0 !important;
         right: auto !important;
     }
+
     .team-section {
         max-width: 100%;
         padding: 0 1rem;
     }
+
     .profile-card {
         width: 100%;
         max-width: 350px;
         margin: 0 auto 2rem;
     }
+
     .profile-photo {
         width: 10rem;
         height: 10rem;
     }
+
     .values-section {
         padding: 0 1rem;
     }
+
     .values-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
+
     .value-card {
         padding: 2rem 1rem;
     }
+
     .value-card figure {
         width: 80px;
         height: 80px;
     }
+
     .value-card img {
         max-height: 50px;
     }
+
     .value-card h3 {
         font-size: 1.2rem;
     }
+
     .about-cta {
         padding: 2rem 1rem;
     }
+
     .cta-button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
@@ -1295,29 +1325,37 @@ time {
     .hero-content h1 {
         font-size: 1.5rem;
     }
+
     .hero-content p {
         font-size: 0.9rem;
     }
+
     .mission-card h2, .value-card h3 {
         font-size: 1.1rem;
     }
+
     .mission-card figure, .value-card figure {
         width: 70px;
         height: 70px;
     }
+
     .mission-card img, .value-card img {
         max-height: 40px;
     }
+
     .profile-photo {
         width: 8rem;
         height: 8rem;
     }
+
     .profile-info h3 {
         font-size: 1.2rem;
     }
+
     .profile-info p {
         font-size: 0.9rem;
     }
+
     .cta-button {
         padding: 0.7rem 1rem;
         font-size: 0.9rem;
@@ -1572,6 +1610,115 @@ input[readonly] {
 /* Success message */
 .message.success {
     color: #2e7d32;
+}
+
+
+.success-container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    animation: fadeIn 0.8s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.success-container::after {
+    content: "✓✓✓";
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    color: rgba(76, 175, 80, 0.05);
+    font-size: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+}
+
+.checkmark {
+    color: #4CAF50;
+    font-size: 80px;
+    margin-bottom: 20px;
+    text-shadow: 0 5px 10px rgba(76, 175, 80, 0.3);
+}
+
+.success-container h1 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.success-container p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.home-link {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.home-link:hover {
+    background-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.home-link::after {
+    content: "→";
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+}
+
+.home-link:hover::after {
+    right: 15px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.celebration {
+    display: inline-block;
+    font-size: 24px;
+    animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+    to {
+        transform: translateY(-10px);
+    }
 }
 
 
@@ -1871,4 +2018,70 @@ input[readonly] {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/*==================================================
+    View messages Design.
+==================================================*/
 
+.message-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.message-table th, .message-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.message-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.message-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.message-table tr:hover {
+    background-color: #ddd;
+}
+
+.unread::before {
+    content: '🔵';
+    margin-right: 5px;
+}
+
+.search-form {
+    margin: 20px 0;
+}
+
+.search-form input[type="text"] {
+    padding: 8px;
+    width: 300px;
+}
+
+.search-form input[type="submit"] {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.action-btn.accept {
+    background-color: #28a745;
+}
+
+.action-btn.reject {
+    background-color: #dc3545;
+}
