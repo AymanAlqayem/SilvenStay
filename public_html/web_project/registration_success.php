@@ -12,6 +12,7 @@ if (!isset($_SESSION['registration_success'])) {
 $name = htmlspecialchars($_SESSION['registration_success']['name']);
 $user_type = htmlspecialchars($_SESSION['registration_success']['user_type']);
 $user_id = htmlspecialchars($_SESSION['registration_success']['user_id']);
+$role_id = htmlspecialchars($_SESSION['registration_success']['role_id']);
 
 // Clear registration success data from session after displaying
 unset($_SESSION['registration_success']);
@@ -36,7 +37,7 @@ unset($_SESSION['registration_success']);
                 <h1>Welcome Aboard, <?= $name ?>!</h1>
                 <p>Your registration was successful! 🎉</p>
                 <p>We're excited to have you join our community as a <?= ucfirst($user_type) ?>.
-                    Your <?= ucfirst($user_type) ?> ID is: <?= $user_id ?>.</p>
+                    Your <?= ucfirst($user_type) ?> ID is: <?= $role_id ?>.</p>
                 <p>Please log in to continue your journey with us.</p>
                 <form method="GET" action="login.php">
                     <button type="submit" name="continue" class="home-link">Let's Login</button>

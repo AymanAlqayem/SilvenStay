@@ -14,26 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['login_error'] = "Please fill in all fields.";
     } else {
         try {
-            // Check user credentials using email and plain text password
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
-            $stmt->execute([
-                'email' => $email,
-                'password' => $password
-            ]);
+            // Check user credentials using email and plain-text password
+            $stmt = $pdo->prepare("SELECT user_id, user_type, password, customer_id, owner_id, manager_id, name FROM users WHERE email = :email AND password = :password");
+            $stmt->execute(['email' => $email, 'password' => $password]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user) {
                 // Successful login
                 $_SESSION['is_registered'] = true;
+                $_SESSION['user_id'] = $user['user_id']; // Numeric user_id for messages and profile
                 $_SESSION['user_type'] = $user['user_type'];
                 $_SESSION['step1']['name'] = $user['name'];
-                if ($user['user_type'] === 'customer') {
-                    $_SESSION['user_id'] = $user['customer_id'];
-                } elseif ($user['user_type'] === 'owner') {
-                    $_SESSION['user_id'] = $user['owner_id'];
-                } elseif ($user['user_type'] === 'manager') {
-                    $_SESSION['user_id'] = $user['manager_id'];
-                }
+                // Store role-specific ID (9-digit customer_id or owner_id)
+                $role_id = $user[$user['user_type'] . '_id'];
+                $_SESSION['role_id'] = $role_id;
                 header("Location: main.php");
                 exit;
             } else {

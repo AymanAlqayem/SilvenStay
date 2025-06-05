@@ -10,24 +10,9 @@ if (!isset($_SESSION['is_registered']) || $_SESSION['is_registered'] !== true ||
 
 $pdo = getPDOConnection();
 
-// Determine the ID column based on user_type
-$user_type = $_SESSION['user_type'];
-$id_column = '';
-if ($user_type === 'customer') {
-    $id_column = 'customer_id';
-} elseif ($user_type === 'owner') {
-    $id_column = 'owner_id';
-} elseif ($user_type === 'manager') {
-    $id_column = 'manager_id';
-} else {
-    $_SESSION['message'] = "Invalid user type.";
-    header("Location: login.php");
-    exit;
-}
-
-// Fetch user
+// Fetch user using numeric user_id
 try {
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE $id_column = :user_id");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -95,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check email uniqueness (excluding current user)
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email AND $id_column != :user_id");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email AND user_id != :user_id");
     $stmt->execute(['email' => $email, 'user_id' => $_SESSION['user_id']]);
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['error_type'] = 'email';
@@ -175,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     bank_branch = :bank_branch, 
                     account_number = :account_number, 
                     profile_photo = :profile_photo
-                 WHERE $id_column = :user_id"
+                 WHERE user_id = :user_id"
             );
             $stmt->execute([
                 'national_id' => $national_id,
@@ -208,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     mobile_number = :mobile, 
                     telephone_number = :telephone, 
                     profile_photo = :profile_photo
-                 WHERE $id_column = :user_id"
+                 WHERE user_id = :user_id"
             );
             $stmt->execute([
                 'national_id' => $national_id,
@@ -262,16 +247,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
-<div class="content-wrapper">
+<section class="content-wrapper">
     <main class="site-main">
         <div class="registration-container">
             <?php if (isset($_SESSION['message'])): ?>
                 <div class="alert alert-error">
                     <span class="alert-icon">⚠️</span>
-                    <span><?php echo htmlspecialchars($_SESSION['message']); ?></span>
+                    <span><?= htmlspecialchars($_SESSION['message']) ?></span>
                     <span class="alert-close" onclick="this.parentElement.style.display='none'">×</span>
                 </div>
-                <?php unset($_SESSION['message']); unset($_SESSION['error_type']); ?>
+                <?php unset($_SESSION['message']);
+                unset($_SESSION['error_type']); ?>
             <?php endif; ?>
 
             <div class="profile-header">
@@ -312,16 +298,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="text" class="form-input" readonly
                                        value="<?= htmlspecialchars($user['owner_id']) ?>">
                             </fieldset>
+                        <?php elseif ($user['user_type'] === 'manager'): ?>
+                            <fieldset class="form-group">
+                                <label class="form-label">Manager ID</label>
+                                <input type="text" class="form-input" readonly
+                                       value="<?= htmlspecialchars($user['manager_id']) ?>">
+                            </fieldset>
                         <?php endif; ?>
 
                         <fieldset class="form-group">
-                            <label class="form-label">National ID</label>
-                            <input type="number" name="national_id" class="form-input" required
+                            <label class="form-label required">National ID</label>
+                            <input type="text" name="national_id" class="form-input" required
                                    value="<?= htmlspecialchars($user['national_id']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Name</label>
+                            <label class="form-label required">Name</label>
                             <input type="text" name="name" class="form-input" required
                                    value="<?= htmlspecialchars($user['name']) ?>">
                         </fieldset>
@@ -333,50 +325,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Flat No</label>
-                            <input type="text" name="flat_no" class="form-input"
+                            <label class="form-label required">Flat No</label>
+                            <input type="text" name="flat_no" class="form-input" required
                                    value="<?= htmlspecialchars($user['flat_no']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Street</label>
-                            <input type="text" name="street" class="form-input"
+                            <label class="form-label required">Street</label>
+                            <input type="text" name="street" class="form-input" required
                                    value="<?= htmlspecialchars($user['street']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">City</label>
-                            <input type="text" name="city" class="form-input"
+                            <label class="form-label required">City</label>
+                            <input type="text" name="city" class="form-input" required
                                    value="<?= htmlspecialchars($user['city']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Postal Code</label>
-                            <input type="text" name="postal_code" class="form-input"
+                            <label class="form-label required">Postal Code</label>
+                            <input type="text" name="postal_code" class="form-input" required
                                    value="<?= htmlspecialchars($user['postal_code']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Date of Birth</label>
-                            <input type="date" name="dob" class="form-input"
+                            <label class="form-label required">Date of Birth</label>
+                            <input type="date" name="dob" class="form-input" required
                                    value="<?= htmlspecialchars($user['date_of_birth']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Email (for login/contact)</label>
+                            <label class="form-label required">Email (for login/contact)</label>
                             <input type="email" name="email" class="form-input" required
                                    value="<?= htmlspecialchars($user['email']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label class="form-label">Mobile</label>
-                            <input type="number" name="mobile" class="form-input"
+                            <label class="form-label required">Mobile</label>
+                            <input type="text" name="mobile" class="form-input" required
                                    value="<?= htmlspecialchars($user['mobile_number']) ?>">
                         </fieldset>
 
                         <fieldset class="form-group">
                             <label class="form-label">Telephone</label>
-                            <input type="number" name="telephone" class="form-input"
+                            <input type="text" name="telephone" class="form-input"
                                    value="<?= htmlspecialchars($user['telephone_number']) ?>">
                         </fieldset>
 
@@ -406,7 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </main>
-</div>
+</section>
 
 <?php include 'footer.php'; ?>
 </body>

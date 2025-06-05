@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         $pdo = getPDOConnection();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Generate 9-digit ID (strictly numeric)
+        // Generate 9-digit numeric ID
         $random_id = str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT);
         $generated_id = $random_id;
 
@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         $user_type = strtolower($_SESSION['user_type'] ?? 'customer');
         $customer_id = $user_type === 'customer' ? $generated_id : null;
         $owner_id = $user_type === 'owner' ? $generated_id : null;
-        $manager_id = $user_type === 'manager' ? $generated_id : null;
 
         $stmt = $pdo->prepare("
             INSERT INTO users (
@@ -66,15 +65,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             ':user_type' => $user_type,
             ':customer_id' => $customer_id,
             ':owner_id' => $owner_id,
-            ':manager_id' => $manager_id,
+            ':manager_id' => null, // No managers in registration
             ':profile_photo' => null
         ]);
+
+        // Get the last inserted user_id
+        $user_id = $pdo->lastInsertId();
 
         // Store confirmation details in session for use in registration_success.php
         $_SESSION['registration_success'] = [
             'name' => $_SESSION['step1']['name'],
             'user_type' => $user_type,
-            'user_id' => $generated_id
+            'user_id' => $user_id, // Numeric user_id for messages
+            'role_id' => $generated_id // 9-digit customer_id or owner_id
         ];
 
         // Clear session data after successful registration

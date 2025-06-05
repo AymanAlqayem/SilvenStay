@@ -3,7 +3,7 @@ CREATE TABLE users
 (
     user_id          INT AUTO_INCREMENT PRIMARY KEY,
     national_id      VARCHAR(50)         NOT NULL,
-    name             VARCHAR(100) UNIQUE NOT NULL,
+    name             VARCHAR(100)        NOT NULL,
 
     -- Split address into components
     flat_no          VARCHAR(50),
@@ -160,3 +160,5 @@ CREATE TABLE messages
     FOREIGN KEY (appointment_id) REFERENCES appointments (appointment_id),
     FOREIGN KEY (rental_id) REFERENCES rentals (rental_id)
 );
+
+
