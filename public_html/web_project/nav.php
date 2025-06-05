@@ -1,10 +1,11 @@
 <?php
-// Determine the current page to set active link
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $current_page = basename($_SERVER['PHP_SELF']);
-// Determine user role from session, default to 'guest' if not set
 $user_role = isset($_SESSION['user_type']) ? strtolower($_SESSION['user_type']) : 'guest';
 
-// Define navigation links based on user role
 $nav_links = [
     'guest' => [
         ['text' => 'Home', 'href' => 'main.php'],
@@ -42,9 +43,8 @@ $nav_links = [
     <ul>
         <?php foreach ($nav_links[$user_role] as $link): ?>
             <li>
-                <a href="<?php echo $link['href']; ?>"
-                   class="<?php echo $current_page === $link['href'] ? 'active' : ''; ?>">
-                    <?php echo $link['text']; ?>
+                <a href="<?= $link['href']; ?>" class="<?= $current_page === $link['href'] ? 'active' : ''; ?>">
+                    <?= $link['text']; ?>
                 </a>
             </li>
         <?php endforeach; ?>

@@ -83,6 +83,13 @@ $photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
         <h3>Rental Conditions</h3>
         <p><?= nl2br(htmlspecialchars($flat['rental_conditions'])) ?></p>
     <?php endif; ?>
+
+    <!-- Action Buttons -->
+    <div class="rent-buttons">
+        <a href="rent.php?id=<?= $flat_id ?>">Rent this Flat</a>
+        <a href="requestAppointment.php?id=<?= $flat_id ?>">Request Appointment</a>
+    </div>
+
 </main>
 
 <?php include 'footer.php'; ?>

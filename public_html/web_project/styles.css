@@ -3217,3 +3217,22 @@ input[readonly] {
         font-size: 1.4rem;
     }
 }
+
+.rent-buttons {
+    margin-top: 2em;
+    display: flex;
+    gap: 20px;
+}
+.rent-buttons a {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+.rent-buttons a:hover {
+    background-color: #0056b3;
+}

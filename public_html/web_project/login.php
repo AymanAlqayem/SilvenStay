@@ -19,16 +19,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute(['email' => $email, 'password' => $password]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+//            if ($user) {
+//                // Successful login
+//                $_SESSION['is_registered'] = true;
+//                $_SESSION['user_id'] = $user['user_id']; // Numeric user_id for messages and profile
+//                $_SESSION['user_type'] = $user['user_type'];
+//                $_SESSION['step1']['name'] = $user['name'];
+//                // Store role-specific ID (9-digit customer_id or owner_id)
+//                $role_id = $user[$user['user_type'] . '_id'];
+//                $_SESSION['role_id'] = $role_id;
+//                header("Location: main.php");
+//                exit;
+//            }
+
             if ($user) {
                 // Successful login
                 $_SESSION['is_registered'] = true;
                 $_SESSION['user_id'] = $user['user_id']; // Numeric user_id for messages and profile
                 $_SESSION['user_type'] = $user['user_type'];
                 $_SESSION['step1']['name'] = $user['name'];
-                // Store role-specific ID (9-digit customer_id or owner_id)
                 $role_id = $user[$user['user_type'] . '_id'];
                 $_SESSION['role_id'] = $role_id;
-                header("Location: main.php");
+
+                // ✅ Check if redirect is set
+                if (!empty($_SESSION['redirect_after_login'])) {
+                    $redirect = $_SESSION['redirect_after_login'];
+                    unset($_SESSION['redirect_after_login']);
+                    header("Location: $redirect");
+                } else {
+                    header("Location: main.php");
+                }
                 exit;
             } else {
                 $_SESSION['login_error'] = "Invalid email or password.";
