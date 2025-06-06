@@ -10,13 +10,13 @@ $nav_links = [
     'guest' => [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
-        ['text' => 'Flat Search', 'href' => 'flatSearch.php'],
+        ['text' => 'Flat Search', 'href' => 'searchFlats.php'],
         ['text' => 'Contact Us', 'href' => 'contact-us.php']
     ],
     'customer' => [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
-        ['text' => 'Search', 'href' => 'flatSearch.php'],
+        ['text' => 'Search', 'href' => 'searchFlats.php'],
         ['text' => 'View Rented Flats', 'href' => 'viewRentedFlat.php'],
         ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']

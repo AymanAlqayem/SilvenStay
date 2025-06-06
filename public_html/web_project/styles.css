@@ -3240,6 +3240,7 @@ input[readonly] {
 .new-message {
     animation: highlightNew 2s ease-in-out 3;
 }
+
 /*
 ===========================================================
     Request Appointment Design
@@ -3396,6 +3397,187 @@ legend {
 
     .slots-table th,
     .slots-table td {
+        min-width: 100px;
+    }
+}
+
+
+/*
+===========================================================
+    Search Design.
+===========================================================
+ */
+
+
+.search-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.search-section h2 {
+    font-size: 2.2rem;
+    color: #2a2a2a;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    position: relative;
+}
+
+.search-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background-color: #B79C67;
+}
+
+.search-form {
+    margin-bottom: 2rem;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2a2a2a;
+    margin-bottom: 0.5rem;
+}
+
+.form-group select,
+.form-group input[type="number"] {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #f9f7f3;
+    transition: border-color 0.3s;
+}
+
+.form-group select:focus,
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: #B79C67;
+    box-shadow: 0 0 0 3px rgba(183, 156, 103, 0.2);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.submit-group {
+    display: flex;
+    align-items: flex-end;
+}
+
+.submit-button {
+    padding: 0.8rem 1.5rem;
+    background-color: #B79C67;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #9a8256;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.results-table th {
+    background-color: #2a2a2a;
+    color: #f9f7f3;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #e0e0e0;
+}
+
+.results-table th a.sort-link {
+    color: #f9f7f3;
+    text-decoration: none;
+}
+
+.results-table th a.sort-link:hover {
+    text-decoration: underline;
+}
+
+.results-table td {
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: #f9f7f3;
+}
+
+.results-table tr:hover {
+    background-color: rgba(183, 156, 103, 0.1);
+}
+
+.table-image {
+    width: 100px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.3s;
+}
+
+.table-image:hover {
+    transform: scale(1.05);
+}
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .search-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .results-table th,
+    .results-table td {
         min-width: 100px;
     }
 }
