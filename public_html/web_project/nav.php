@@ -32,7 +32,7 @@ $nav_links = [
     'manager' => [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
-        ['text' => 'Flats Inquire', 'href' => 'flatsInquire.php'],
+        ['text' => 'Flats Inquire', 'href' => 'inquireFlats.php'],
         ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']
     ]

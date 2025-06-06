@@ -11,24 +11,25 @@ if (!isset($_GET['user_id']) || !is_numeric($_GET['user_id'])) {
 
 $pdo = getPDOConnection();
 
-// Fetch owner details
 try {
+    // Fetch user details (handles both owner and customer)
     $stmt = $pdo->prepare("
-        SELECT name, city, mobile_number, email
+        SELECT name, city, mobile_number, email, user_type
         FROM users
-        WHERE user_id = :user_id AND user_type = 'owner'
+        WHERE user_id = :user_id AND user_type IN ('owner', 'customer')
     ");
     $stmt->execute(['user_id' => (int)$_GET['user_id']]);
-    $owner = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$owner) {
-        $_SESSION['message'] = "Owner not found.";
+    if (!$user) {
+        $_SESSION['message'] = "User not found.";
         header("Location: viewRentedFlat.php");
         exit;
     }
 
     // Format phone number if exists
-    $phoneNumber = $owner['mobile_number'] ? preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', $owner['mobile_number']) : 'Not provided';
+    $phoneNumber = $user['mobile_number'] ? preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', $user['mobile_number']) : 'Not provided';
+
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: " . htmlspecialchars($e->getMessage());
     header("Location: viewRentedFlat.php");
@@ -40,7 +41,7 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Owner Details | SilvenStay</title>
+    <title><?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?> Details | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,28 +50,29 @@ try {
 
 <section class="content-wrapper">
     <main class="site-main">
-        <div class="owner-profile-container">
-            <div class="owner-card">
-                <div class="owner-header">
-                    <div class="owner-avatar">
+        <div class="user-profile-container">
+            <div class="<?php echo $user['user_type'] === 'owner' ? 'owner-card' : 'customer-card'; ?>">
+                <div class="user-header">
+                    <div class="user-avatar <?php echo $user['user_type'] === 'owner' ? 'owner-avatar' : 'customer-avatar'; ?>">
                         <?php
                         $initials = '';
-                        $nameParts = explode(' ', $owner['name']);
+                        $nameParts = explode(' ', $user['name']);
                         foreach ($nameParts as $part) {
                             $initials .= strtoupper(substr($part, 0, 1));
                         }
                         echo htmlspecialchars($initials);
                         ?>
                     </div>
-                    <div class="owner-title">
-                        <h2><?php echo htmlspecialchars($owner['name']); ?></h2>
-                        <p class="owner-location">
-                            <?php echo htmlspecialchars($owner['city'] ?: 'Location not specified'); ?>
+                    <div class="user-title">
+                        <h2><?php echo htmlspecialchars($user['name']); ?></h2>
+                        <p class="user-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <?php echo htmlspecialchars($user['city'] ?: 'Location not specified'); ?>
                         </p>
                     </div>
                 </div>
 
-                <div class="owner-details">
+                <div class="user-details">
                     <div class="detail-item">
                         <div class="detail-icon">📞</div>
                         <div class="detail-content">
@@ -84,29 +86,32 @@ try {
                         <div class="detail-content">
                             <h4>Email Address</h4>
                             <p>
-                                <a href="mailto:<?php echo htmlspecialchars($owner['email']); ?>" class="email-link">
-                                    <?php echo htmlspecialchars($owner['email']); ?>
+                                <a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" class="email-link">
+                                    <?php echo htmlspecialchars($user['email']); ?>
                                 </a>
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="owner-actions">
-                    <a href="viewRentedFlat.php" class="btn btn-outline">Back to Rented Flats</a>
-                    <a href="mailto:<?php echo htmlspecialchars($owner['email']); ?>" class="btn btn-primary">Contact
-                        Owner</a>
+                <div class="user-actions">
+                    <a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" class="contact-button">
+                        Contact <?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?>
+                    </a>
                 </div>
             </div>
 
-            <div class="owner-testimonial">
+            <div class="<?php echo $user['user_type'] === 'owner' ? 'owner-testimonial' : 'customer-testimonial'; ?>">
                 <div class="testimonial-header">
                     <span class="testimonial-icon">“</span>
-                    <h3>About This Owner</h3>
+                    <h3>About This <?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?></h3>
                 </div>
                 <p class="testimonial-content">
-                    This owner is a trusted member of our community, maintaining high standards for their properties and
-                    committed to providing excellent service to their tenants.
+                    <?php
+                    echo $user['user_type'] === 'owner'
+                        ? 'This owner is a trusted member of our community, maintaining high standards for their properties and committed to providing excellent service to their tenants.'
+                        : 'This customer is a valued member of our community, known for their reliability and positive engagement with property owners.';
+                    ?>
                 </p>
                 <div class="trust-badges">
                     <div class="badge">

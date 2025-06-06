@@ -2198,7 +2198,7 @@ input[readonly] {
 }
 
 /* ==========================================================================
-   Rented flats Design (userCard.php)
+   Rented.php Design
    ========================================================================== */
 .rental-table {
     width: 100%;
@@ -2252,30 +2252,277 @@ input[readonly] {
     background-color: #0056b3;
 }
 
-.owner-link {
-    color: #007bff;
-    text-decoration: none;
+/*.owner-link {*/
+/*    color: #007bff;*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*.owner-link:hover {*/
+/*    text-decoration: underline;*/
+/*}*/
+
+/*.empty-rentals {*/
+/*    text-align: center;*/
+/*    padding: 40px;*/
+/*    background-color: #f9f9f9;*/
+/*    border-radius: 5px;*/
+/*    margin-top: 20px;*/
+/*}*/
+
+/*.empty-rentals-icon {*/
+/*    font-size: 3em;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*!* Owner Card Styles *!*/
+/*.owner-profile-container {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr;*/
+/*    gap: 2rem;*/
+/*    max-width: 1200px;*/
+/*    margin: 0 auto;*/
+/*    padding: 2rem;*/
+/*}*/
+
+/*.owner-card {*/
+/*    background: white;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);*/
+/*    padding: 2rem;*/
+/*    transition: transform 0.3s ease, box-shadow 0.3s ease;*/
+/*    border-top: 5px solid #B79C67;*/
+/*}*/
+
+/*.owner-card:hover {*/
+/*    transform: translateY(-5px);*/
+/*    box-shadow: 0 15px 40px rgba(183, 156, 103, 0.15);*/
+/*}*/
+
+/*.owner-header {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    margin-bottom: 2rem;*/
+/*    padding-bottom: 1.5rem;*/
+/*    border-bottom: 1px solid #f0f0f0;*/
+/*}*/
+
+/*.owner-avatar {*/
+/*    width: 80px;*/
+/*    height: 80px;*/
+/*    border-radius: 50%;*/
+/*    background: linear-gradient(135deg, #B79C67 0%, #2a2a2a 100%);*/
+/*    color: white;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    font-size: 2rem;*/
+/*    font-weight: bold;*/
+/*    margin-right: 1.5rem;*/
+/*    flex-shrink: 0;*/
+/*}*/
+
+/*.owner-title h2 {*/
+/*    color: #2a2a2a;*/
+/*    margin-bottom: 0.5rem;*/
+/*    font-size: 1.8rem;*/
+/*}*/
+
+/*.owner-location {*/
+/*    color: #666;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 0.5rem;*/
+/*    font-size: 1rem;*/
+/*}*/
+
+/*.owner-location i {*/
+/*    color: #B79C67;*/
+/*}*/
+
+/*.owner-details {*/
+/*    margin-bottom: 2rem;*/
+/*}*/
+
+/*.detail-item {*/
+/*    display: flex;*/
+/*    align-items: flex-start;*/
+/*    margin-bottom: 1.5rem;*/
+/*}*/
+
+/*.detail-icon {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    background-color: rgba(183, 156, 103, 0.1);*/
+/*    border-radius: 50%;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    margin-right: 1rem;*/
+/*    color: #B79C67;*/
+/*    font-size: 1rem;*/
+/*    flex-shrink: 0;*/
+/*}*/
+
+/*.detail-content h4 {*/
+/*    color: #555;*/
+/*    font-size: 0.9rem;*/
+/*    margin-bottom: 0.3rem;*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*.detail-content p {*/
+/*    color: #2a2a2a;*/
+/*    font-size: 1.1rem;*/
+/*    margin: 0;*/
+/*}*/
+
+/*.email-link {*/
+/*    color: #2a2a2a;*/
+/*    text-decoration: none;*/
+/*    transition: color 0.3s;*/
+/*    word-break: break-all;*/
+/*}*/
+
+/*.email-link:hover {*/
+/*    color: #B79C67;*/
+/*    text-decoration: underline;*/
+/*}*/
+
+/*.owner-actions {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    gap: 1rem;*/
+/*}*/
+
+/*.back-button, .contact-button {*/
+/*    padding: 0.8rem 1.5rem;*/
+/*    border-radius: 6px;*/
+/*    text-decoration: none;*/
+/*    font-weight: 500;*/
+/*    display: inline-flex;*/
+/*    align-items: center;*/
+/*    gap: 0.5rem;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.back-button {*/
+/*    background-color: #f5f5f5;*/
+/*    color: #2a2a2a;*/
+/*    border: 1px solid #e0e0e0;*/
+/*}*/
+
+/*.back-button:hover {*/
+/*    background-color: #e0e0e0;*/
+/*}*/
+
+/*.contact-button {*/
+/*    background-color: #B79C67;*/
+/*    color: white;*/
+/*}*/
+
+/*.contact-button:hover {*/
+/*    background-color: #9a8256;*/
+/*    transform: translateY(-2px);*/
+/*    box-shadow: 0 4px 12px rgba(183, 156, 103, 0.3);*/
+/*}*/
+
+/*.owner-testimonial {*/
+/*    background: white;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);*/
+/*    padding: 2rem;*/
+/*    position: relative;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.owner-testimonial::before {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 5px;*/
+/*    height: 100%;*/
+/*    background: linear-gradient(to bottom, #B79C67, #2a2a2a);*/
+/*}*/
+
+/*.testimonial-header {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    margin-bottom: 1.5rem;*/
+/*    color: #B79C67;*/
+/*}*/
+
+/*.testimonial-header i {*/
+/*    font-size: 1.5rem;*/
+/*    margin-right: 1rem;*/
+/*}*/
+
+/*.testimonial-header h3 {*/
+/*    margin: 0;*/
+/*    font-size: 1.5rem;*/
+/*    color: #2a2a2a;*/
+/*}*/
+
+/*.testimonial-content {*/
+/*    color: #555;*/
+/*    line-height: 1.7;*/
+/*    margin-bottom: 2rem;*/
+/*    font-size: 1.05rem;*/
+/*}*/
+
+/*.trust-badges {*/
+/*    display: flex;*/
+/*    gap: 1rem;*/
+/*    flex-wrap: wrap;*/
+/*}*/
+
+/*.badge {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 0.5rem;*/
+/*    background-color: #f9f7f3;*/
+/*    padding: 0.5rem 1rem;*/
+/*    border-radius: 20px;*/
+/*    font-size: 0.9rem;*/
+/*    color: #555;*/
+/*}*/
+
+/*.badge i {*/
+/*    color: #B79C67;*/
+/*}*/
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .owner-profile-container {
+        grid-template-columns: 1fr;
+    }
 }
 
-.owner-link:hover {
-    text-decoration: underline;
+@media (max-width: 768px) {
+    .owner-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .owner-avatar {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .owner-actions {
+        flex-direction: column;
+    }
+
+    .back-button, .contact-button {
+        justify-content: center;
+    }
 }
 
-.empty-rentals {
-    text-align: center;
-    padding: 40px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    margin-top: 20px;
-}
 
-.empty-rentals-icon {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-/* Owner Card Styles */
-.owner-profile-container {
+/* ==========================================================================
+   user cards Design.
+   ========================================================================== */
+.user-profile-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -2284,21 +2531,21 @@ input[readonly] {
     padding: 2rem;
 }
 
-.owner-card {
+.customer-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     padding: 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-top: 5px solid #B79C67;
+    border-top: 5px solid #4a6bff; /* Blue border for customers */
 }
 
-.owner-card:hover {
+.customer-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(183, 156, 103, 0.15);
+    box-shadow: 0 15px 40px rgba(74, 107, 255, 0.15);
 }
 
-.owner-header {
+.user-header {
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
@@ -2306,11 +2553,11 @@ input[readonly] {
     border-bottom: 1px solid #f0f0f0;
 }
 
-.owner-avatar {
+.customer-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #B79C67 0%, #2a2a2a 100%);
+    background: linear-gradient(135deg, #4a6bff 0%, #2a2a2a 100%); /* Blue gradient for customers */
     color: white;
     display: flex;
     align-items: center;
@@ -2321,13 +2568,13 @@ input[readonly] {
     flex-shrink: 0;
 }
 
-.owner-title h2 {
+.user-title h2 {
     color: #2a2a2a;
     margin-bottom: 0.5rem;
     font-size: 1.8rem;
 }
 
-.owner-location {
+.user-location {
     color: #666;
     display: flex;
     align-items: center;
@@ -2335,11 +2582,11 @@ input[readonly] {
     font-size: 1rem;
 }
 
-.owner-location i {
-    color: #B79C67;
+.user-location i {
+    color: #4a6bff; /* Blue icon for customers */
 }
 
-.owner-details {
+.user-details {
     margin-bottom: 2rem;
 }
 
@@ -2352,13 +2599,13 @@ input[readonly] {
 .detail-icon {
     width: 40px;
     height: 40px;
-    background-color: rgba(183, 156, 103, 0.1);
+    background-color: rgba(74, 107, 255, 0.1); /* Blue tint for customers */
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 1rem;
-    color: #B79C67;
+    color: #4a6bff; /* Blue icon color */
     font-size: 1rem;
     flex-shrink: 0;
 }
@@ -2384,17 +2631,17 @@ input[readonly] {
 }
 
 .email-link:hover {
-    color: #B79C67;
+    color: #4a6bff; /* Blue hover color for customers */
     text-decoration: underline;
 }
 
-.owner-actions {
+.user-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 1rem;
 }
 
-.back-button, .contact-button {
+.contact-button {
     padding: 0.8rem 1.5rem;
     border-radius: 6px;
     text-decoration: none;
@@ -2403,30 +2650,17 @@ input[readonly] {
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
-}
-
-.back-button {
-    background-color: #f5f5f5;
-    color: #2a2a2a;
-    border: 1px solid #e0e0e0;
-}
-
-.back-button:hover {
-    background-color: #e0e0e0;
-}
-
-.contact-button {
-    background-color: #B79C67;
+    background-color: #4a6bff; /* Blue button for customers */
     color: white;
 }
 
 .contact-button:hover {
-    background-color: #9a8256;
+    background-color: #3a5aff; /* Darker blue on hover */
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(183, 156, 103, 0.3);
+    box-shadow: 0 4px 12px rgba(74, 107, 255, 0.3);
 }
 
-.owner-testimonial {
+.customer-testimonial {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -2435,21 +2669,21 @@ input[readonly] {
     overflow: hidden;
 }
 
-.owner-testimonial::before {
+.customer-testimonial::before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 5px;
     height: 100%;
-    background: linear-gradient(to bottom, #B79C67, #2a2a2a);
+    background: linear-gradient(to bottom, #4a6bff, #2a2a2a); /* Blue gradient for customers */
 }
 
 .testimonial-header {
     display: flex;
     align-items: center;
     margin-bottom: 1.5rem;
-    color: #B79C67;
+    color: #4a6bff; /* Blue header for customers */
 }
 
 .testimonial-header i {
@@ -2488,32 +2722,32 @@ input[readonly] {
 }
 
 .badge i {
-    color: #B79C67;
+    color: #4a6bff; /* Blue badge icons for customers */
 }
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .owner-profile-container {
+    .user-profile-container {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .owner-header {
+    .user-header {
         flex-direction: column;
         text-align: center;
     }
 
-    .owner-avatar {
+    .user-avatar {
         margin-right: 0;
         margin-bottom: 1.5rem;
     }
 
-    .owner-actions {
+    .user-actions {
         flex-direction: column;
     }
 
-    .back-button, .contact-button {
+    .contact-button {
         justify-content: center;
     }
 }
@@ -3579,5 +3813,169 @@ legend {
     .results-table th,
     .results-table td {
         min-width: 100px;
+    }
+}
+
+/*
+================================================================
+    Flats Inquire
+================================================================
+ */
+
+/* General styling for the inquiry section */
+.inquiry-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.inquiry-form {
+    margin-bottom: 2rem;
+}
+
+.inquiry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.submit-group {
+    align-self: end;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Table styling */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.results-table th,
+.results-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.results-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.results-table tr:hover {
+    background-color: #e9ecef;
+}
+
+.sort-link {
+    color: white;
+    text-decoration: none;
+}
+
+.sort-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Existing styles remain unchanged... */
+
+/* Modify flat-button to remove blue cover and hover effect */
+.flat-button {
+    background-color: transparent; /* Remove blue background */
+    color: #007bff; /* Keep link color */
+    text-decoration: none; /* Remove underline */
+    padding: 0; /* Remove padding */
+    border: none; /* Remove border */
+    border-radius: 0; /* Remove rounded corners */
+    transition: none; /* Disable hover transition */
+}
+
+.flat-button:hover {
+    background-color: transparent; /* No hover effect */
+    text-decoration: underline; /* Optional: keep underline on hover */
+}
+
+/* Existing styles continue... */
+
+.owner-link {
+    color: #007bff;
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.owner-link:hover {
+    background-color: #e7f1ff;
+    text-decoration: underline;
+}
+
+.no-results {
+    text-align: center;
+    padding: 1rem;
+    color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .inquiry-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-table th,
+    .results-table td {
+        font-size: 0.9rem;
+        padding: 0.5rem;
     }
 }
