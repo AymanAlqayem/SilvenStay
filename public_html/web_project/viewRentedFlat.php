@@ -38,6 +38,12 @@ try {
     <meta charset="UTF-8">
     <title>My Rented Flats | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Capitalize status text for better readability */
+        .status-pending { text-transform: capitalize; }
+        .status-current { text-transform: capitalize; }
+        .status-past { text-transform: capitalize; }
+    </style>
 </head>
 <body>
 <?php include 'header.php'; ?>
@@ -69,6 +75,7 @@ try {
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Location</th>
+                        <th>Status</th>
                         <th>Owner</th>
                     </tr>
                     </thead>
@@ -76,7 +83,7 @@ try {
                     <?php foreach ($rentals as $rental): ?>
                         <tr class="status-<?php echo htmlspecialchars($rental['status']); ?>">
                             <td>
-                                <a href="flatDetail.php?flat_id=<?php echo (int)$rental['flat_id']; ?>" target="_blank"
+                                <a href="flatDetails.php?flat_id=<?php echo (int)$rental['flat_id']; ?>" target="_blank"
                                    class="flat-button">
                                     <?php echo htmlspecialchars($rental['reference_number']); ?>
                                 </a>
@@ -85,6 +92,7 @@ try {
                             <td><?php echo date('M j, Y', strtotime($rental['start_date'])); ?></td>
                             <td><?php echo date('M j, Y', strtotime($rental['end_date'])); ?></td>
                             <td><?php echo htmlspecialchars($rental['location']); ?></td>
+                            <td><?php echo htmlspecialchars($rental['status']); ?></td>
                             <td>
                                 <a href="userCard.php?user_id=<?php echo (int)$rental['owner_id']; ?>" target="_blank"
                                    class="owner-link">

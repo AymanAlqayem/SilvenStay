@@ -23,7 +23,7 @@ if ($flat_id <= 0) {
 
 // Fetch flat details
 $stmt = $pdo->prepare("
-    SELECT f.*, d.title, d.description, u.name AS owner_name, u.owner_id, 
+    SELECT f.*, d.title, d.description, u.name AS owner_name, u.owner_id, u.user_id AS owner_user_id, 
            CONCAT(u.flat_no, ', ', u.street, ', ', u.city) AS owner_address, 
            u.mobile_number AS owner_mobile
     FROM flats f
@@ -36,6 +36,11 @@ $flat = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$flat) {
     die("Flat not found.");
+}
+
+// Validate owner_id exists in users table
+if (!$flat['owner_user_id']) {
+    die("Error: The owner of this flat is not registered in the system. Please contact support.");
 }
 
 // Check if user already rented this flat
@@ -84,6 +89,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
         $errors[] = "Expiry date must be in YYYY-MM format.";
     }
 
+    // Check flat availability for the requested dates
+    $availability_stmt = $pdo->prepare("
+        SELECT rental_id FROM rentals
+        WHERE flat_id = :flat_id
+        AND status IN ('pending', 'current')
+        AND (
+            (:start_date BETWEEN start_date AND end_date)
+            OR (:end_date BETWEEN start_date AND end_date)
+            OR (start_date BETWEEN :start_date AND :end_date)
+            OR (end_date BETWEEN :start_date AND :end_date)
+        )
+    ");
+    $availability_stmt->execute([
+        'flat_id' => $flat_id,
+        'start_date' => $start_date,
+        'end_date' => $end_date
+    ]);
+    if ($availability_stmt->fetch()) {
+        $errors[] = "This flat is not available for the selected dates.";
+    }
+
     if (empty($errors)) {
         $start = new DateTime($start_date);
         $end = new DateTime($end_date);
@@ -96,34 +122,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
         $total_cost = $months * $flat['monthly_rent'];
         $expiry_date_db = $expiry . '-01';
 
-        $insert = $pdo->prepare("
-            INSERT INTO rentals (flat_id, customer_id, start_date, end_date, total_cost, status)
-            VALUES (:flat_id, :customer_id, :start_date, :end_date, :total_cost, 'pending')
-        ");
-        $insert->execute([
-            'flat_id' => $flat_id,
-            'customer_id' => $_SESSION['user_id'],
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'total_cost' => $total_cost
-        ]);
+        // Start a transaction
+        try {
+            $pdo->beginTransaction();
 
-        $rental_id = $pdo->lastInsertId();
+            // Insert into rentals table
+            $insert = $pdo->prepare("
+                INSERT INTO rentals (flat_id, customer_id, start_date, end_date, total_cost, status)
+                VALUES (:flat_id, :customer_id, :start_date, :end_date, :total_cost, 'pending')
+            ");
+            $insert->execute([
+                'flat_id' => $flat_id,
+                'customer_id' => $_SESSION['user_id'],
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'total_cost' => $total_cost
+            ]);
 
-        $payment = $pdo->prepare("
-            INSERT INTO payments (rental_id, credit_card_number, expiry_date, cardholder_name, payment_date)
-            VALUES (:rental_id, :card_number, :expiry_date, :card_name, NOW())
-        ");
-        $payment->execute([
-            'rental_id' => $rental_id,
-            'card_number' => $card_number,
-            'expiry_date' => $expiry_date_db,
-            'card_name' => $card_name
-        ]);
+            $rental_id = $pdo->lastInsertId();
 
-        $customer_message = "Dear {$user['name']}, your rental for '{$flat['title']}' is confirmed. Please contact the owner, {$flat['owner_name']}, at {$flat['owner_mobile']}.";
-        $owner_message = "Dear {$flat['owner_name']}, your flat '{$flat['title']}' has been rented by {$user['name']}. Contact: {$user['mobile_number']}.";
-        $success = true;
+            // Insert into payments table
+            $payment = $pdo->prepare("
+                INSERT INTO payments (rental_id, credit_card_number, expiry_date, cardholder_name, payment_date)
+                VALUES (:rental_id, :card_number, :expiry_date, :card_name, NOW())
+            ");
+            $payment->execute([
+                'rental_id' => $rental_id,
+                'card_number' => $card_number,
+                'expiry_date' => $expiry_date_db,
+                'card_name' => $card_name
+            ]);
+
+            // Send message to owner
+            $message = $pdo->prepare("
+                INSERT INTO messages (user_id, title, message_body, sender, sent_date, message_type, flat_id, rental_id)
+                VALUES (:user_id, :title, :message_body, :sender, NOW(), 'rental', :flat_id, :rental_id)
+            ");
+            $message->execute([
+                'user_id' => $flat['owner_user_id'],
+                'title' => "New Rental Request for {$flat['title']}",
+                'message_body' => "Dear {$flat['owner_name']}, a rental request has been submitted by {$user['name']} for your flat '{$flat['title']}' (Ref: {$flat['reference_number']}) from {$start_date} to {$end_date}. Total cost: \${$total_cost}. Please review and accept or reject this request.",
+                'sender' => "System on behalf of {$user['name']}",
+                'flat_id' => $flat_id,
+                'rental_id' => $rental_id
+            ]);
+
+            $pdo->commit();
+
+            $customer_message = "Dear {$user['name']}, your rental request for '{$flat['title']}' (Ref: {$flat['reference_number']}) is pending approval. You will be notified once the owner responds.";
+            $owner_message = "Dear {$flat['owner_name']}, a rental request for '{$flat['title']}' (Ref: {$flat['reference_number']}) has been sent to you for review.";
+            $success = true;
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $errors[] = "Failed to process rental request: " . htmlspecialchars($e->getMessage());
+        }
     }
 }
 ?>
@@ -133,14 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
 <head>
     <meta charset="UTF-8">
     <title>Rent <?= htmlspecialchars($flat['title']) ?> | SilvenStay</title>
-    <link rel="stylesheet" href="styles.css" />
-    <style>
-        .form-group { margin-bottom: 1em; }
-        label { display: block; margin-bottom: 0.5em; }
-        input[type="text"], input[type="date"], input[type="month"] { width: 100%; padding: 0.5em; }
-        .error { color: red; }
-        .success { color: green; }
-    </style>
+    <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
 
@@ -164,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
         </div>
     <?php elseif ($success): ?>
         <div class="success">
-            <p>Rental confirmed successfully!</p>
+            <p>Rental request submitted successfully!</p>
             <p><?= nl2br(htmlspecialchars($customer_message)) ?></p>
             <p><?= nl2br(htmlspecialchars($owner_message)) ?></p>
         </div>
@@ -174,23 +219,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
         <form method="post" novalidate>
             <fieldset disabled>
                 <legend>Flat Details</legend>
-                <div class="form-group"><label>Reference:</label><input value="<?= $flat['reference_number'] ?>"></div>
-                <div class="form-group"><label>Location:</label><input value="<?= $flat['location'] ?>"></div>
-                <div class="form-group"><label>Address:</label><input value="<?= $flat['address'] ?>"></div>
-                <div class="form-group"><label>Bedrooms:</label><input value="<?= $flat['bedrooms'] ?>"></div>
-                <div class="form-group"><label>Bathrooms:</label><input value="<?= $flat['bathrooms'] ?>"></div>
-                <div class="form-group"><label>Monthly Rent:</label><input value="$<?= $flat['monthly_rent'] ?>"></div>
+                <div class="form-group"><label>Reference:</label><input
+                            value="<?= htmlspecialchars($flat['reference_number']) ?>"></div>
+                <div class="form-group"><label>Location:</label><input
+                            value="<?= htmlspecialchars($flat['location']) ?>"></div>
+                <div class="form-group"><label>Address:</label><input value="<?= htmlspecialchars($flat['address']) ?>">
+                </div>
+                <div class="form-group"><label>Bedrooms:</label><input
+                            value="<?= htmlspecialchars($flat['bedrooms']) ?>"></div>
+                <div class="form-group"><label>Bathrooms:</label><input
+                            value="<?= htmlspecialchars($flat['bathrooms']) ?>"></div>
+                <div class="form-group"><label>Monthly Rent:</label><input
+                            value="$<?= htmlspecialchars(number_format($flat['monthly_rent'], 2)) ?>"></div>
             </fieldset>
 
             <fieldset>
                 <legend>Rental Period</legend>
                 <div class="form-group">
                     <label for="start_date">Start Date:</label>
-                    <input type="date" name="start_date" required />
+                    <input type="date" name="start_date" required/>
                 </div>
                 <div class="form-group">
                     <label for="end_date">End Date:</label>
-                    <input type="date" name="end_date" required />
+                    <input type="date" name="end_date" required/>
                 </div>
             </fieldset>
 
@@ -198,15 +249,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
                 <legend>Payment</legend>
                 <div class="form-group">
                     <label for="card_number">Card Number (9 digits):</label>
-                    <input type="text" name="card_number" maxlength="9" pattern="\d{9}" required />
+                    <input type="text" name="card_number" maxlength="9" pattern="\d{9}" required/>
                 </div>
                 <div class="form-group">
                     <label for="expiry">Expiry (YYYY-MM):</label>
-                    <input type="month" name="expiry" required />
+                    <input type="month" name="expiry" required/>
                 </div>
                 <div class="form-group">
                     <label for="card_name">Name on Card:</label>
-                    <input type="text" name="card_name" required />
+                    <input type="text" name="card_name" required/>
                 </div>
             </fieldset>
 

@@ -1,38 +1,51 @@
 <?php
-require 'dbconfig.inc.php';
+session_start();
+require_once 'dbconfig.inc.php';
 
-$flat_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$flat_id = isset($_GET['flat_id']) ? intval($_GET['flat_id']) : 0;
 if ($flat_id <= 0) {
-    die("Invalid flat ID.");
+    $_SESSION['message'] = "Invalid or missing flat ID.";
+    header("Location: main.php");
+    exit;
 }
 
 $pdo = getPDOConnection();
 
 // Get flat details using named parameter
-$stmt = $pdo->prepare("
-    SELECT f.*, d.title, d.description
-    FROM flats f
-    JOIN flat_descriptions d ON f.flat_id = d.flat_id
-    WHERE f.flat_id = :flat_id
-");
-$stmt->execute(['flat_id' => $flat_id]);
-$flat = $stmt->fetch(PDO::FETCH_ASSOC);
+try {
+    $stmt = $pdo->prepare("
+        SELECT f.*, u.name AS owner_name, d.title, d.description
+        FROM flats f
+        LEFT JOIN flat_descriptions d ON f.flat_id = d.flat_id
+        JOIN users u ON f.owner_id = u.user_id
+        WHERE f.flat_id = :flat_id
+    ");
+    $stmt->execute(['flat_id' => $flat_id]);
+    $flat = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$flat) {
-    die("Flat not found.");
+    if (!$flat) {
+        $_SESSION['message'] = "Flat not found.";
+        header("Location: main.php");
+        exit;
+    }
+
+    // Get flat photos
+    $photoStmt = $pdo->prepare("SELECT photo_path FROM flat_photos WHERE flat_id = :flat_id");
+    $photoStmt->execute(['flat_id' => $flat_id]);
+    $photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $_SESSION['message'] = "Database error: Unable to fetch flat details.";
+    error_log("Database error in flatDetails.php: " . $e->getMessage());
+    header("Location: main.php");
+    exit;
 }
-
-// Get flat photos
-$photoStmt = $pdo->prepare("SELECT photo_path FROM flat_photos WHERE flat_id = :flat_id");
-$photoStmt->execute(['flat_id' => $flat_id]);
-$photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?= htmlspecialchars($flat['title']) ?> | SilvenStay</title>
+    <title><?= htmlspecialchars($flat['title'] ?? 'Flat ' . $flat['reference_number']) ?> | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -41,31 +54,38 @@ $photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
 <?php include 'nav.php'; ?>
 
 <main class="site-main">
-    <h2><?= htmlspecialchars($flat['title']) ?></h2>
+    <h2><?= htmlspecialchars($flat['title'] ?? 'Flat ' . $flat['reference_number']) ?></h2>
     <p><strong>Location:</strong> <?= htmlspecialchars($flat['location']) ?> - <?= htmlspecialchars($flat['address']) ?>
     </p>
     <p><strong>Rent:</strong> $<?= number_format($flat['monthly_rent'], 2) ?>/month</p>
-    <p><strong>Size:</strong> <?= $flat['size_sqm'] ?> sqm | <?= $flat['bedrooms'] ?> BR | <?= $flat['bathrooms'] ?> BA
-    </p>
+    <p><strong>Size:</strong> <?= (int)$flat['size_sqm'] ?> sqm | <?= (int)$flat['bedrooms'] ?> BR
+        | <?= (int)$flat['bathrooms'] ?> BA</p>
     <p><strong>Available From:</strong> <?= htmlspecialchars($flat['available_from']) ?></p>
+    <p><strong>Owner:</strong> <?= htmlspecialchars($flat['owner_name'] ?? 'Unknown Owner') ?></p>
 
     <section class="photo-slider">
-        <?php foreach ($photos as $photo): ?>
-            <img src="flatImages/<?= htmlspecialchars($photo['photo_path']) ?>" alt="Flat photo">
-        <?php endforeach; ?>
+        <?php if (!empty($photos)): ?>
+            <?php foreach ($photos as $photo): ?>
+                <img src="flatImages/<?= htmlspecialchars($photo['photo_path']) ?>" alt="Flat photo">
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No photos available</p>
+        <?php endif; ?>
     </section>
 
-    <h3>Description</h3>
-    <ul class="bullet-points">
-        <?php
-        foreach (explode("\n", $flat['description']) as $bullet) {
-            $cleanBullet = trim($bullet, "• \t\r\n");
-            if (!empty($cleanBullet)) {
-                echo '<li>' . htmlspecialchars($cleanBullet) . '</li>';
+    <?php if (!empty($flat['description'])): ?>
+        <h3>Description</h3>
+        <ul class="bullet-points">
+            <?php
+            foreach (explode("\n", $flat['description']) as $bullet) {
+                $cleanBullet = trim($bullet, "• \t\r\n");
+                if (!empty($cleanBullet)) {
+                    echo '<li>' . htmlspecialchars($cleanBullet) . '</li>';
+                }
             }
-        }
-        ?>
-    </ul>
+            ?>
+        </ul>
+    <?php endif; ?>
 
     <h3>Amenities</h3>
     <ul class="bullet-points">
@@ -86,8 +106,8 @@ $photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Action Buttons -->
     <div class="rent-buttons">
-        <a href="rent.php?id=<?= $flat_id ?>">Rent this Flat</a>
-        <a href="requestAppointment.php?id=<?= $flat_id ?>">Request Appointment</a>
+        <a href="rent.php?id=<?= (int)$flat_id ?>">Rent this Flat</a>
+        <a href="requestAppointment.php?id=<?= (int)$flat_id ?>">Request Appointment</a>
     </div>
 
 </main>
