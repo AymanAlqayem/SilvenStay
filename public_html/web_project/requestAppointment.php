@@ -63,18 +63,18 @@ $success = false;
 $customer_message = '';
 $owner_message = '';
 
-// Fetch available slots for the flat
+// Fetch all slots (available and booked) for display
 $slots_stmt = $pdo->prepare("
-    SELECT slot_id, appointment_date, appointment_time 
+    SELECT slot_id, appointment_date, appointment_time, is_booked 
     FROM flat_availability_slots 
-    WHERE flat_id = :flat_id AND is_booked = FALSE 
+    WHERE flat_id = :flat_id 
     AND appointment_date >= CURDATE()
     ORDER BY appointment_date, appointment_time
 ");
 $slots_stmt->execute(['flat_id' => $flat_id]);
-$available_slots = $slots_stmt->fetchAll(PDO::FETCH_ASSOC);
+$all_slots = $slots_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Only process form if no existing appointment request
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_requested) {
     $slot_id = isset($_POST['slot_id']) ? intval($_POST['slot_id']) : 0;
 
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_requested) {
 <head>
     <meta charset="UTF-8">
     <title>Request Appointment for <?= htmlspecialchars($flat['title']) ?> | SilvenStay</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -235,27 +235,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_requested) {
             </fieldset>
 
             <fieldset>
-                <legend>Select Appointment Slot</legend>
-                <?php if (empty($available_slots)): ?>
+                <legend>Available Appointment Slots</legend>
+                <?php if (empty($all_slots)): ?>
                     <p>No available appointment slots for this flat.</p>
                 <?php else: ?>
-                    <div class="form-group">
-                        <label for="slot_id">Available Slots:</label>
-                        <select name="slot_id" required>
-                            <option value="">Select a time slot</option>
-                            <?php foreach ($available_slots as $slot): ?>
-                                <option value="<?= htmlspecialchars($slot['slot_id']) ?>">
-                                    <?= htmlspecialchars($slot['appointment_date'] . ' at ' . $slot['appointment_time']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <table class="slots-table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($all_slots as $slot): ?>
+                            <tr class="<?= $slot['is_booked'] ? 'slot-taken' : 'slot-available' ?>">
+                                <td><?= htmlspecialchars($slot['appointment_date']) ?></td>
+                                <td><?= htmlspecialchars($slot['appointment_time']) ?></td>
+                                <td><?= $slot['is_booked'] ? 'Taken' : 'Available' ?></td>
+                                <td>
+                                    <?php if (!$slot['is_booked']): ?>
+                                        <button type="submit" name="slot_id" value="<?= htmlspecialchars($slot['slot_id']) ?>" class="slot-book-btn">Book</button>
+                                    <?php else: ?>
+                                        <button type="button" class="slot-book-btn" disabled>Taken</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 <?php endif; ?>
             </fieldset>
-
-            <?php if (!empty($available_slots)): ?>
-                <button type="submit">Confirm Appointment</button>
-            <?php endif; ?>
         </form>
     <?php endif; ?>
 </main>
