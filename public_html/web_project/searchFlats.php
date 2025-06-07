@@ -1,5 +1,4 @@
 <?php
-// Database connection
 require_once 'dbconfig.inc.php';
 
 try {
@@ -84,37 +83,47 @@ try {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <?php include 'header.php' ?>
 <?php include 'nav.php' ?>
 
-<div class="content-wrapper">
+<section class="content-wrapper">
+
     <main class="site-main">
+
         <section class="search-section">
+
             <h2>Find Your Perfect Flat</h2>
+
             <form action="searchFlats.php" method="GET" class="search-form">
-                <div class="search-grid">
-                    <div class="form-group">
+                <section class="search-grid">
+
+                    <section class="form-group">
                         <label for="location">Location</label>
                         <select name="location" id="location">
-                            <option value="Any" <?php echo $location === 'Any' ? 'selected' : ''; ?>>Any Location</option>
+                            <option value="Any" <?php echo $location === 'Any' ? 'selected' : ''; ?>>Any Location
+                            </option>
                             <?php foreach ($locations as $loc): ?>
                                 <option value="<?php echo htmlspecialchars($loc); ?>" <?php echo $location === $loc ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($loc); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </section>
+
+                    <section class="form-group">
                         <label for="min_price">Min Price (£)</label>
                         <input type="number" name="min_price" id="min_price"
                                value="<?php echo htmlspecialchars($min_price ?? ''); ?>" min="0" step="50">
-                    </div>
-                    <div class="form-group">
+                    </section>
+
+                    <section class="form-group">
                         <label for="max_price">Max Price (£)</label>
                         <input type="number" name="max_price" id="max_price"
                                value="<?php echo htmlspecialchars($max_price ?? ''); ?>" min="0" step="50">
-                    </div>
-                    <div class="form-group">
+                    </section>
+
+                    <section class="form-group">
                         <label for="bedrooms">Bedrooms</label>
                         <select name="bedrooms" id="bedrooms">
                             <option value="Any" <?php echo $bedrooms === 'Any' ? 'selected' : ''; ?>>Any</option>
@@ -122,8 +131,9 @@ try {
                             <option value="2" <?php echo $bedrooms === '2' ? 'selected' : ''; ?>>2</option>
                             <option value="3+" <?php echo $bedrooms === '3+' ? 'selected' : ''; ?>>3+</option>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </section>
+
+                    <section class="form-group">
                         <label for="bathrooms">Bathrooms</label>
                         <select name="bathrooms" id="bathrooms">
                             <option value="Any" <?php echo $bathrooms === 'Any' ? 'selected' : ''; ?>>Any</option>
@@ -131,17 +141,20 @@ try {
                             <option value="2" <?php echo $bathrooms === '2' ? 'selected' : ''; ?>>2</option>
                             <option value="3+" <?php echo $bathrooms === '3+' ? 'selected' : ''; ?>>3+</option>
                         </select>
-                    </div>
-                    <div class="form-group checkbox-group">
+                    </section>
+
+                    <section class="form-group checkbox-group">
                         <label>
                             <input type="checkbox" name="furnished" <?php echo $furnished ? 'checked' : ''; ?>>
                             Furnished Only
                         </label>
-                    </div>
-                    <div class="form-group submit-group">
+                    </section>
+
+                    <section class="form-group submit-group">
                         <button type="submit" class="submit-button">Search Flats</button>
-                    </div>
-                </div>
+                    </section>
+
+                </section>
             </form>
 
             <table class="results-table">
@@ -185,7 +198,8 @@ try {
                                 <?php if ($row['photo_path']): ?>
                                     <a href="flatDetails.php?flat_id=<?php echo urlencode($row['flat_id']); ?>"
                                        target="_blank">
-                                        <img src="flatImages/<?php echo htmlspecialchars($row['photo_path']); ?>" alt="Flat Photo"
+                                        <img src="flatImages/<?php echo htmlspecialchars($row['photo_path']); ?>"
+                                             alt="Flat Photo"
                                              class="table-image">
                                     </a>
                                 <?php else: ?>
@@ -203,7 +217,7 @@ try {
             </table>
         </section>
     </main>
-</div>
+</section>
 <?php include 'footer.php' ?>
 </body>
 </html>

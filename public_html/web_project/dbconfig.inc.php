@@ -10,8 +10,6 @@ function getPDOConnection()
 
     $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
 
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
-
     try {
 
         $pdo = new PDO($dsn, $username, $password);

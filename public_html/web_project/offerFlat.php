@@ -12,6 +12,7 @@ $success = false;
 
 // Ensure flatImages directory exists
 $imageDir = 'flatImages/';
+
 if (!is_dir($imageDir)) {
     mkdir($imageDir, 0755, true);
 }
@@ -238,210 +239,263 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Offer Flat for Rent | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .form-step { display: none; }
-        .form-step.active { display: block; }
-        .form-group { margin-bottom: 1em; }
-        label { display: block; margin-bottom: 0.5em; }
-        input, textarea { width: 100%; padding: 0.5em; }
-        .error { color: red; }
-        .success { color: green; }
-        .step-nav { margin: 1em 0; }
-        .slot-entry { margin-bottom: 1em; border: 1px solid #ddd; padding: 1em; }
-        .remove-slot { color: red; cursor: pointer; }
-    </style>
 </head>
 <body>
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
-<section class="content-wrapper">
+<fieldset class="content-wrapper">
     <main class="site-main">
         <h2>Offer Flat for Rent</h2>
 
         <?php if (!empty($errors)): ?>
-            <div class="error">
+            <aside class="error-notice">
                 <ul>
                     <?php foreach ($errors as $error): ?>
                         <li><?php echo htmlspecialchars($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
-            </div>
+            </aside>
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="success">
+            <aside class="success-notice">
                 <p>Your flat has been submitted for manager approval. You will be notified once reviewed.</p>
-            </div>
+            </aside>
         <?php else: ?>
             <form id="flat-form" method="POST" enctype="multipart/form-data">
                 <!-- Step 1: Flat Details -->
-                <div class="form-step active" id="step-1">
+                <fieldset class="flat-form-step active" id="step-1">
                     <h3>Step 1: Flat Details</h3>
-                    <div class="form-group">
+                    <fieldset class="input-container">
                         <label for="location">Location:</label>
-                        <input type="text" name="location" value="<?php echo htmlspecialchars($location ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="text" name="location" id="location"
+                               value="<?php echo htmlspecialchars($location ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="address">Address:</label>
-                        <input type="text" name="address" value="<?php echo htmlspecialchars($address ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="text" name="address" id="address"
+                               value="<?php echo htmlspecialchars($address ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="monthly_rent">Monthly Rent ($):</label>
-                        <input type="number" name="monthly_rent" step="0.01" value="<?php echo htmlspecialchars($monthly_rent ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="number" name="monthly_rent" id="monthly_rent" step="0.01"
+                               value="<?php echo htmlspecialchars($monthly_rent ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="available_from">Available From:</label>
-                        <input type="date" name="available_from" value="<?php echo htmlspecialchars($available_from ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="date" name="available_from" id="available_from"
+                               value="<?php echo htmlspecialchars($available_from ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="available_to">Available To (Optional):</label>
-                        <input type="date" name="available_to" value="<?php echo htmlspecialchars($available_to ?? ''); ?>">
-                    </div>
-                    <div class="form-group">
+                        <input type="date" name="available_to" id="available_to"
+                               value="<?php echo htmlspecialchars($available_to ?? ''); ?>">
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="bedrooms">Bedrooms:</label>
-                        <input type="number" name="bedrooms" value="<?php echo htmlspecialchars($bedrooms ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="number" name="bedrooms" id="bedrooms"
+                               value="<?php echo htmlspecialchars($bedrooms ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="bathrooms">Bathrooms:</label>
-                        <input type="number" name="bathrooms" value="<?php echo htmlspecialchars($bathrooms ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="number" name="bathrooms" id="bathrooms"
+                               value="<?php echo htmlspecialchars($bathrooms ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="size_sqm">Size (sqm):</label>
-                        <input type="number" name="size_sqm" value="<?php echo htmlspecialchars($size_sqm ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
+                        <input type="number" name="size_sqm" id="size_sqm"
+                               value="<?php echo htmlspecialchars($size_sqm ?? ''); ?>" required>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="rental_conditions">Rental Conditions:</label>
-                        <textarea name="rental_conditions"><?php echo htmlspecialchars($rental_conditions ?? ''); ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Features:</label>
-                        <label><input type="checkbox" name="is_furnished" <?php echo isset($_POST['is_furnished']) ? 'checked' : ''; ?>> Furnished</label>
-                        <label><input type="checkbox" name="has_heating" <?php echo isset($_POST['has_heating']) ? 'checked' : ''; ?>> Heating</label>
-                        <label><input type="checkbox" name="has_ac" <?php echo isset($_POST['has_ac']) ? 'checked' : ''; ?>> Air Conditioning</label>
-                        <label><input type="checkbox" name="has_access_control" <?php echo isset($_POST['has_access_control']) ? 'checked' : ''; ?>> Access Control</label>
-                        <label><input type="checkbox" name="has_parking" <?php echo isset($_POST['has_parking']) ? 'checked' : ''; ?>> Parking</label>
-                        <label><input type="checkbox" name="has_backyard" <?php echo isset($_POST['has_backyard']) ? 'checked' : ''; ?>> Backyard</label>
-                        <label><input type="checkbox" name="has_playground" <?php echo isset($_POST['has_playground']) ? 'checked' : ''; ?>> Playground</label>
-                        <label><input type="checkbox" name="has_storage" <?php echo isset($_POST['has_storage']) ? 'checked' : ''; ?>> Storage</label>
-                    </div>
-                    <div class="form-group">
+                        <textarea name="rental_conditions"
+                                  id="rental_conditions"><?php echo htmlspecialchars($rental_conditions ?? ''); ?></textarea>
+                    </fieldset>
+
+                    <!-- Inside Step 1: Flat Details -->
+                    <fieldset class="checkbox-container">
+                        <legend>Amenities</legend>
+                        <fieldset class="checkbox-grid">
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="is_furnished"
+                                       id="is_furnished" <?php echo isset($_POST['is_furnished']) ? 'checked' : ''; ?>>
+                                <label for="is_furnished">Furnished</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_heating"
+                                       id="has_heating" <?php echo isset($_POST['has_heating']) ? 'checked' : ''; ?>>
+                                <label for="has_heating">Heating</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_ac"
+                                       id="has_ac" <?php echo isset($_POST['has_ac']) ? 'checked' : ''; ?>>
+                                <label for="has_ac">Air Conditioning</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_access_control"
+                                       id="has_access_control" <?php echo isset($_POST['has_access_control']) ? 'checked' : ''; ?>>
+                                <label for="has_access_control">Access Control</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_parking"
+                                       id="has_parking" <?php echo isset($_POST['has_parking']) ? 'checked' : ''; ?>>
+                                <label for="has_parking">Parking</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_backyard"
+                                       id="has_backyard" <?php echo isset($_POST['has_backyard']) ? 'checked' : ''; ?>>
+                                <label for="has_backyard">Backyard</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_playground"
+                                       id="has_playground" <?php echo isset($_POST['has_playground']) ? 'checked' : ''; ?>>
+                                <label for="has_playground">Playground</label>
+                            </fieldset>
+                            <fieldset class="checkbox-item">
+                                <input type="checkbox" name="has_storage"
+                                       id="has_storage" <?php echo isset($_POST['has_storage']) ? 'checked' : ''; ?>>
+                                <label for="has_storage">Storage</label>
+                            </fieldset>
+                        </fieldset>
+                    </fieldset>
+
+                    <fieldset class="input-container">
                         <label for="photos">Photos (min 3, PNG only, max 5MB):</label>
-                        <input type="file" name="photos[]" multiple accept="image/png" required>
+                        <input type="file" name="photos[]" id="photos" multiple accept="image/png" required>
                         <?php if (!empty($errors) && !empty($photos['name'][0])): ?>
                             <p>Note: Please re-upload photos due to validation errors.</p>
                         <?php endif; ?>
-                    </div>
-
-                    <div class="step-nav">
+                    </fieldset>
+                    <nav class="step-controls">
                         <button type="button" onclick="nextStep(2)">Next</button>
-                    </div>
-                </div>
+                    </nav>
+                </fieldset>
 
                 <!-- Step 2: Marketing Info -->
-                <div class="form-step" id="step-2">
+                <fieldset class="flat-form-step" id="step-2">
                     <h3>Step 2: Marketing Info (Optional)</h3>
-                    <div class="form-group">
+                    <fieldset class="input-container">
                         <label for="marketing_title">Title:</label>
-                        <input type="text" name="marketing_title" value="<?php echo htmlspecialchars($marketing_title ?? ''); ?>">
-                    </div>
-                    <div class="form-group">
+                        <input type="text" name="marketing_title" id="marketing_title"
+                               value="<?php echo htmlspecialchars($marketing_title ?? ''); ?>">
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="marketing_description">Description:</label>
-                        <textarea name="marketing_description"><?php echo htmlspecialchars($marketing_description ?? ''); ?></textarea>
-                    </div>
-                    <div class="form-group">
+                        <textarea name="marketing_description"
+                                  id="marketing_description"><?php echo htmlspecialchars($marketing_description ?? ''); ?></textarea>
+                    </fieldset>
+                    <fieldset class="input-container">
                         <label for="nearby_url">Nearby URL:</label>
-                        <input type="url" name="nearby_url" value="<?php echo htmlspecialchars($nearby_url ?? ''); ?>">
-                    </div>
-                    <div class="step-nav">
+                        <input type="url" name="nearby_url" id="nearby_url"
+                               value="<?php echo htmlspecialchars($nearby_url ?? ''); ?>">
+                    </fieldset>
+                    <nav class="step-controls">
                         <button type="button" onclick="prevStep(1)">Previous</button>
                         <button type="button" onclick="nextStep(3)">Next</button>
-                    </div>
-                </div>
+                    </nav>
+                </fieldset>
 
-                <!-- Step 3: Preview Timetables -->
-                <div class="form-step" id="step-3">
+                <!-- Step 3: Availability Slots -->
+                <fieldset class="flat-form-step" id="step-3">
                     <h3>Step 3: Availability Slots</h3>
-                    <div id="slot-entries">
+                    <fieldset id="slot-entries">
                         <?php
                         if (!empty($appointment_dates)) {
                             foreach ($appointment_dates as $index => $date) {
                                 ?>
-                                <div class="slot-entry">
-                                    <div class="form-group">
-                                        <label>Date:</label>
-                                        <input type="date" name="appointment_dates[]" value="<?php echo htmlspecialchars($date); ?>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Time:</label>
-                                        <input type="time" name="appointment_times[]" value="<?php echo htmlspecialchars($appointment_times[$index] ?? ''); ?>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Telephone Number:</label>
-                                        <input type="text" name="telephone_numbers[]" pattern="\d{10,15}" value="<?php echo htmlspecialchars($telephone_numbers[$index] ?? ''); ?>" required>
-                                    </div>
-                                    <span class="remove-slot" onclick="removeSlot(this)">Remove</span>
-                                </div>
+                                <fieldset class="slot-entry">
+                                    <fieldset class="input-container">
+                                        <label for="appointment_dates_<?php echo $index; ?>">Date:</label>
+                                        <input type="date" name="appointment_dates[]"
+                                               id="appointment_dates_<?php echo $index; ?>"
+                                               value="<?php echo htmlspecialchars($date); ?>" required>
+                                    </fieldset>
+                                    <fieldset class="input-container">
+                                        <label for="appointment_times_<?php echo $index; ?>">Time:</label>
+                                        <input type="time" name="appointment_times[]"
+                                               id="appointment_times_<?php echo $index; ?>"
+                                               value="<?php echo htmlspecialchars($appointment_times[$index] ?? ''); ?>"
+                                               required>
+                                    </fieldset>
+                                    <fieldset class="input-container">
+                                        <label for="telephone_numbers_<?php echo $index; ?>">Telephone Number:</label>
+                                        <input
+                                                type="text"
+                                                name="telephone_numbers[]"
+                                                id="telephone_numbers_<?php echo $index; ?>"
+                                                value="<?php echo htmlspecialchars($telephone_numbers[$index] ?? ''); ?>"
+                                                required
+                                                pattern="\d{10}"
+                                                maxlength="10"
+                                                inputmode="numeric"
+                                                title="Please enter exactly 10 digits">
+
+                                    </fieldset>
+                                    <span class="slot-remove" onclick="removeSlot(this)">Remove</span>
+                                </fieldset>
                                 <?php
                             }
                         } else {
                             ?>
-                            <div class="slot-entry">
-                                <div class="form-group">
-                                    <label>Date:</label>
-                                    <input type="date" name="appointment_dates[]" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Time:</label>
-                                    <input type="time" name="appointment_times[]" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Telephone Number:</label>
-                                    <input type="text" name="telephone_numbers[]" pattern="\d{10,15}" required>
-                                </div>
-                                <span class="remove-slot" onclick="removeSlot(this)">Remove</span>
-                            </div>
+                            <fieldset class="slot-entry">
+                                <fieldset class="input-container">
+                                    <label for="appointment_dates_0">Date:</label>
+                                    <input type="date" name="appointment_dates[]" id="appointment_dates_0" required>
+                                </fieldset>
+                                <fieldset class="input-container">
+                                    <label for="appointment_times_0">Time:</label>
+                                    <input type="time" name="appointment_times[]" id="appointment_times_0" required>
+                                </fieldset>
+                                <fieldset class="input-container">
+                                    <label for="telephone_numbers_0">Telephone Number:</label>
+                                    <input type="text" name="telephone_numbers[]" id="telephone_numbers_0"
+                                           pattern="\d{10,15}" required>
+                                </fieldset>
+                                <span class="slot-remove" onclick="removeSlot(this)">Remove</span>
+                            </fieldset>
                             <?php
                         }
                         ?>
-                    </div>
-                    <button type="button" onclick="addSlot()">Add Another Slot</button>
-                    <div class="step-nav">
+                    </fieldset>
+                    <button type="button" class="slot-add-button" onclick="addSlot()">Add Another Slot</button>
+                    <nav class="step-controls">
                         <button type="button" onclick="prevStep(2)">Previous</button>
                         <button type="submit">Submit</button>
-                    </div>
-                </div>
+                    </nav>
+                </fieldset>
             </form>
 
             <script>
                 function nextStep(step) {
-                    document.querySelector('.form-step.active').classList.remove('active');
+                    document.querySelector('.flat-form-step.active').classList.remove('active');
                     document.getElementById('step-' + step).classList.add('active');
                 }
 
                 function prevStep(step) {
-                    document.querySelector('.form-step.active').classList.remove('active');
+                    document.querySelector('.flat-form-step.active').classList.remove('active');
                     document.getElementById('step-' + step).classList.add('active');
                 }
 
                 function addSlot() {
                     const container = document.getElementById('slot-entries');
-                    const entry = document.createElement('div');
+                    const entryCount = document.querySelectorAll('.slot-entry').length;
+                    const entry = document.createElement('fieldset');
                     entry.className = 'slot-entry';
                     entry.innerHTML = `
-                        <div class="form-group">
-                            <label>Date:</label>
-                            <input type="date" name="appointment_dates[]" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Time:</label>
-                            <input type="time" name="appointment_times[]" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Telephone Number:</label>
-                            <input type="text" name="telephone_numbers[]" pattern="\d{10,15}" required>
-                        </div>
-                        <span class="remove-slot" onclick="removeSlot(this)">Remove</span>
+                        <fieldset class="input-container">
+                            <label for="appointment_dates_${entryCount}">Date:</label>
+                            <input type="date" name="appointment_dates[]" id="appointment_dates_${entryCount}" required>
+                        </fieldset>
+                        <fieldset class="input-container">
+                            <label for="appointment_times_${entryCount}">Time:</label>
+                            <input type="time" name="appointment_times[]" id="appointment_times_${entryCount}" required>
+                        </fieldset>
+                        <fieldset class="input-container">
+                            <label for="telephone_numbers_${entryCount}">Telephone Number:</label>
+                            <input type="text" name="telephone_numbers[]" id="telephone_numbers_${entryCount}" pattern="\d{10,15}" required>
+                        </fieldset>
+                        <span class="slot-remove" onclick="removeSlot(this)">Remove</span>
                     `;
                     container.appendChild(entry);
                 }
@@ -454,7 +508,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </script>
         <?php endif; ?>
     </main>
-</section>
+</fieldset>
 
 <?php include 'footer.php'; ?>
 </body>

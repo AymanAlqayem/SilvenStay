@@ -32,17 +32,25 @@ unset($_SESSION['registration_success']);
 <section class="content-wrapper">
     <main class="site-main">
         <section class="success-container">
-            <div class="content">
+
+            <section class="content">
+
                 <span class="checkmark">✓</span>
+
                 <h1>Welcome Aboard, <?= $name ?>!</h1>
+
                 <p>Your registration was successful! 🎉</p>
+
                 <p>We're excited to have you join our community as a <?= ucfirst($user_type) ?>.
                     Your <?= ucfirst($user_type) ?> ID is: <?= $role_id ?>.</p>
+
                 <p>Please log in to continue your journey with us.</p>
+
                 <form method="GET" action="login.php">
                     <button type="submit" name="continue" class="home-link">Let's Login</button>
                 </form>
-            </div>
+
+            </section>
         </section>
     </main>
 </section>

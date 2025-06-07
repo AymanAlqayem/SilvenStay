@@ -34,22 +34,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Flats | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .content-wrapper { padding: 20px; }
-        .site-main { max-width: 1200px; margin: 0 auto; }
-        h2 { margin-bottom: 1em; }
-        .error { color: red; margin-bottom: 1em; }
-        .flats-table { width: 100%; border-collapse: collapse; margin-bottom: 2em; }
-        .flats-table th, .flats-table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
-        .flats-table th { background-color: #f4f4f4; font-weight: bold; }
-        .flats-table tr:nth-child(even) { background-color: #f9f9f9; }
-        .flats-table tr:nth-child(odd) { background-color: #ffffff; }
-        .flats-table img { max-width: 100px; height: auto; }
-        .status-pending { color: goldenrod; }
-        .status-approved { color: green; }
-        .status-rented { color: blue; }
-        .status-rejected { color: red; }
-    </style>
 </head>
 <body>
 <?php include 'header.php'; ?>
@@ -57,16 +41,17 @@ try {
 
 <section class="content-wrapper">
     <main class="site-main">
+
         <h2>My Flats</h2>
 
         <?php if (!empty($errors)): ?>
-            <div class="error">
+            <section class="error">
                 <ul>
                     <?php foreach ($errors as $error): ?>
                         <li><?php echo htmlspecialchars($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
-            </div>
+            </section>
         <?php endif; ?>
 
         <?php if (empty($flats)): ?>

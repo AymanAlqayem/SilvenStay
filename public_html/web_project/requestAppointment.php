@@ -182,56 +182,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_requested) {
 <?php include 'nav.php'; ?>
 
 <main class="site-main">
+
     <h2>Request Appointment for <?= htmlspecialchars($flat['title']) ?></h2>
 
     <?php if ($already_requested): ?>
-        <div class="error">
-            <p>You have already requested an appointment for this flat. Please check your appointments for more info.</p>
-        </div>
+        <section class="error">
+            <p>You have already requested an appointment for this flat. Please check your appointments for more
+                info.</p>
+        </section>
+
     <?php elseif (!empty($errors)): ?>
-        <div class="error">
+        <section class="error">
             <ul>
                 <?php foreach ($errors as $error): ?>
                     <li><?= htmlspecialchars($error) ?></li>
                 <?php endforeach; ?>
             </ul>
-        </div>
+        </section>
     <?php elseif ($success): ?>
-        <div class="success">
+        <section class="success">
             <p>Appointment request submitted successfully!</p>
             <p><?= nl2br(htmlspecialchars($customer_message)) ?></p>
             <p><?= nl2br(htmlspecialchars($owner_message)) ?></p>
-        </div>
+        </section>
     <?php endif; ?>
 
     <?php if (!$already_requested && !$success): ?>
         <form method="post" novalidate>
+
             <fieldset disabled>
                 <legend>Flat Details</legend>
-                <div class="form-group">
+
+                <article class="form-group">
                     <label>Reference:</label>
                     <input value="<?= htmlspecialchars($flat['reference_number']) ?>">
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label>Location:</label>
                     <input value="<?= htmlspecialchars($flat['location']) ?>">
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label>Address:</label>
                     <input value="<?= htmlspecialchars($flat['address']) ?>">
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label>Bedrooms:</label>
                     <input value="<?= htmlspecialchars($flat['bedrooms']) ?>">
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label>Bathrooms:</label>
                     <input value="<?= htmlspecialchars($flat['bathrooms']) ?>">
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label>Monthly Rent:</label>
                     <input value="$<?= htmlspecialchars(number_format($flat['monthly_rent'], 2)) ?>">
-                </div>
+                </article>
+
             </fieldset>
 
             <fieldset>
@@ -256,7 +267,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_requested) {
                                 <td><?= $slot['is_booked'] ? 'Taken' : 'Available' ?></td>
                                 <td>
                                     <?php if (!$slot['is_booked']): ?>
-                                        <button type="submit" name="slot_id" value="<?= htmlspecialchars($slot['slot_id']) ?>" class="slot-book-btn">Book</button>
+                                        <button type="submit" name="slot_id"
+                                                value="<?= htmlspecialchars($slot['slot_id']) ?>" class="slot-book-btn">
+                                            Book
+                                        </button>
                                     <?php else: ?>
                                         <button type="button" class="slot-book-btn" disabled>Taken</button>
                                     <?php endif; ?>

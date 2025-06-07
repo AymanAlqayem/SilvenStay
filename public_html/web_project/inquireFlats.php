@@ -112,23 +112,29 @@ try {
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
-<div class="content-wrapper">
+<section class="content-wrapper">
+
     <main class="site-main">
+
         <section class="inquiry-section">
+
             <h2>Flat Inquiry</h2>
+
             <form action="inquireFlats.php" method="GET" class="inquiry-form">
-                <div class="inquiry-grid">
-                    <div class="form-group">
+                <section class="inquiry-grid">
+                    <article class="form-group">
                         <label for="start_date">Rental Start Date</label>
                         <input type="date" name="start_date" id="start_date"
                                value="<?php echo htmlspecialchars($start_date); ?>">
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="end_date">Rental End Date</label>
                         <input type="date" name="end_date" id="end_date"
                                value="<?php echo htmlspecialchars($end_date); ?>">
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="location">Location</label>
                         <select name="location" id="location">
                             <option value="Any" <?php echo $location === 'Any' ? 'selected' : ''; ?>>Any Location
@@ -139,13 +145,15 @@ try {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="future_date">Future Availability Date</label>
                         <input type="date" name="future_date" id="future_date"
                                value="<?php echo htmlspecialchars($future_date); ?>">
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="owner_id">Owner</label>
                         <select name="owner_id" id="owner_id">
                             <option value="" <?php echo $owner_id === '' ? 'selected' : ''; ?>>Any Owner</option>
@@ -155,8 +163,9 @@ try {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="customer_id">Customer</label>
                         <select name="customer_id" id="customer_id">
                             <option value="" <?php echo $customer_id === '' ? 'selected' : ''; ?>>Any Customer</option>
@@ -166,20 +175,24 @@ try {
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </article>
+
+                    <article class="form-group">
                         <label for="status">Flat Status</label>
                         <select name="status" id="status">
                             <option value="Any" <?php echo $status === 'Any' ? 'selected' : ''; ?>>Any Status</option>
-                            <option value="pending" <?php echo $status === 'pending' ? 'selected' : ''; ?>>Pending</option>
-                            <option value="approved" <?php echo $status === 'approved' ? 'selected' : ''; ?>>Approved</option>
+                            <option value="pending" <?php echo $status === 'pending' ? 'selected' : ''; ?>>Pending
+                            </option>
+                            <option value="approved" <?php echo $status === 'approved' ? 'selected' : ''; ?>>Approved
+                            </option>
                             <option value="rented" <?php echo $status === 'rented' ? 'selected' : ''; ?>>Rented</option>
                         </select>
-                    </div>
-                    <div class="form-group submit-group">
+                    </article>
+
+                    <section class="form-group submit-group">
                         <button type="submit" class="submit-button">Search Flats</button>
-                    </div>
-                </div>
+                    </section>
+                </section>
             </form>
 
             <table class="results-table">
@@ -218,7 +231,7 @@ try {
                                     <?php echo htmlspecialchars($row['reference_number']); ?>
                                 </a>
                             </td>
-                            <td>£<?php echo number_format($row['monthly_rent'], 2); ?></td>
+                            <td> $ <?php echo number_format($row['monthly_rent'], 2); ?></td>
                             <td><?php echo htmlspecialchars($row['start_date'] ?: '-'); ?></td>
                             <td><?php echo htmlspecialchars($row['end_date'] ?: 'Ongoing'); ?></td>
                             <td><?php echo htmlspecialchars($row['location']); ?></td>
@@ -250,7 +263,7 @@ try {
             </table>
         </section>
     </main>
-</div>
+</section>
 <?php include 'footer.php'; ?>
 </body>
 </html>

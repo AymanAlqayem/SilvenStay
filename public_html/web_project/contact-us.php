@@ -1,14 +1,18 @@
 <?php
-// Check if form was submitted
+// Handle contact form submission
 $show_alert = false;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
-    // Simple validation - check required fields are not empty
-    if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['message'])) {
-        $show_alert = true;
 
-        // Here you would typically:
-        // 1. Process the form data (send email, save to database, etc.)
-        // 2. Clear the form if needed
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
+    // Sanitize and fetch inputs
+    $name = htmlspecialchars(trim($_POST['name']));
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $subject = htmlspecialchars(trim($_POST['subject']));
+    $message = htmlspecialchars(trim($_POST['message']));
+
+    // Validate fields
+    if (!empty($name) && !empty($email) && !empty($subject) && !empty($message) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Simulate successful form submission (fake success)
+        $show_alert = true;
     }
 }
 ?>
@@ -27,96 +31,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
 <section class="content-wrapper">
     <?php include 'nav.php'; ?>
 
-    <main class="site-main contact-main">
+    <main class="site-main">
 
         <!-- Hero Section -->
         <section class="contact-hero">
+
             <article class="hero-content">
                 <h2>Connect With SilvenStay</h2>
                 <p class="hero-text">Your journey to the perfect home starts with a conversation</p>
-
                 <section class="hero-icons">
-                    <article class="icon-circle">
-                        <span>Property Experts</span>
-                    </article>
-                    <article class="icon-circle">
-                        <span>24/7 Support</span>
-                    </article>
-                    <article class="icon-circle">
-                        <span>Personalized Service</span>
-                    </article>
+                    <article class="icon-circle"><span>Property Experts</span></article>
+                    <article class="icon-circle"><span>24/7 Support</span></article>
+                    <article class="icon-circle"><span>Personalized Service</span></article>
                 </section>
             </article>
 
             <figure class="hero-wave">
                 <img src="images/wave.png" alt="hero image">
             </figure>
+
         </section>
 
-        <!-- Contact Cards -->
+
+        <!-- Contact Info Cards -->
         <section class="contact-content">
 
             <article class="contact-info">
+
                 <h3><span class="highlight">Our</span> Contact Channels</h3>
+
                 <section class="info-grid">
                     <article class="info-card">
-                        <figure class="card-icon">
-                        </figure>
                         <h4>Visit Our Office</h4>
                         <p>Al-Masyoun, Ramallah, Palestine</p>
                         <p>Building 12, Floor 3</p>
                     </article>
 
                     <article class="info-card">
-                        <figure class="card-icon">
-                        </figure>
                         <h4>Call Our Team</h4>
                         <p><a href="tel:+972594276335">+972 594276335</a></p>
                         <p>Mon-Fri: 9 AM - 4 PM</p>
                     </article>
 
                     <article class="info-card">
-                        <figure class="card-icon">
-                        </figure>
                         <h4>Email Support</h4>
                         <p><a href="mailto:nabilayman021@gmail.com">nabilayman021@gmail.com</a></p>
                         <p>Response within 24 hours</p>
                     </article>
 
                     <article class="info-card">
-                        <figure class="card-icon">
-                        </figure>
                         <h4>Social Media</h4>
                         <nav class="social-links">
-                            <a href="https://www.facebook.com/ayman.nabil.58726" target="_blank" aria-label="Facebook">
-                                <img src="images/facebook.png" alt="facebook icon">
-                            </a>
-
-                            <a href="http://instagram.com/ayman_tarifi" target="_blank" aria-label="Instagram">
-                                <img src="images/instagram.png" alt="instagram icon">
-                            </a>
-
-                            <a href="https://www.linkedin.com/in/ayman-alqayem-9012a232a/" target="_blank"
-                               aria-label="LinkedIn">
-                                <img src="images/linkedin.png" alt="linkedin icon">
-                            </a>
+                            <a href="https://www.facebook.com/ayman.nabil.58726" target="_blank"><img
+                                        src="images/facebook.png" alt="facebook icon"></a>
+                            <a href="http://instagram.com/ayman_tarifi" target="_blank"><img src="images/instagram.png"
+                                                                                             alt="instagram icon"></a>
+                            <a href="https://www.linkedin.com/in/ayman-alqayem-9012a232a/" target="_blank"><img
+                                        src="images/linkedin.png" alt="linkedin icon"></a>
                         </nav>
                         <p>Daily updates & offers</p>
                     </article>
+
                 </section>
+
             </article>
 
             <!-- Contact Form -->
-            <article class="contact-form-section">
-                <header class="form-header">
+            <article>
+                <header>
                     <h3><span class="highlight">Send</span> Us a Message</h3>
                     <p>Fill out the form below and our team will respond promptly</p>
                 </header>
 
-                <form method="POST" class="contact-form">
+                <form method="POST">
                     <input type="hidden" name="contact_form" value="1">
 
-                    <section class="input-row">
+                    <section>
                         <fieldset class="input-field">
                             <input type="text" id="name" name="name" required placeholder=" ">
                             <label for="name">Your Name</label>
@@ -128,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         </fieldset>
                     </section>
 
-                    <fieldset class="input-field select-field">
+                    <fieldset class="input-field">
                         <select id="subject" name="subject" required>
                             <option value="" disabled selected></option>
                             <option value="General Inquiry">General Inquiry</option>
@@ -159,81 +149,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_form'])) {
                         <p>✓ Message sent successfully! We will contact you soon.</p>
                     </div>
                 <?php endif; ?>
-
             </article>
         </section>
 
+
         <!-- FAQ Section -->
         <section class="faq-section">
-            <header class="section-header">
+
+            <header>
                 <h3><span class="highlight">Frequently</span> Asked Questions</h3>
                 <p>Quick answers to common inquiries</p>
             </header>
 
             <article class="faq-accordion">
                 <details class="faq-item">
-                    <summary class="faq-question">
-                        <h4>How do I book a flat through SilvenStay?</h4>
-                    </summary>
+                    <summary class="faq-question"><h4>How do I book a flat through SilvenStay?</h4></summary>
                     <div class="faq-answer">
-                        <p>Use our intuitive search tool to find available flats that match your criteria. Once you've
-                            selected your preferred property, follow our streamlined booking process. Our dedicated team
-                            will then guide you through the paperwork and payment process, ensuring a smooth transition
-                            to your new home.</p>
+                        <p>Use our search tool to find flats, then follow the booking process. Our team will guide you
+                            through the paperwork.</p>
                     </div>
                 </details>
-
                 <details class="faq-item">
-                    <summary class="faq-question">
-                        <h4>What payment options are available?</h4>
-                    </summary>
+                    <summary class="faq-question"><h4>What payment options are available?</h4></summary>
                     <div class="faq-answer">
-                        <p>We offer multiple secure payment methods including bank transfers, major credit cards (Visa,
-                            MasterCard, American Express), and popular digital wallets. For specific details about
-                            payment plans or assistance with transactions, our support team is available to help you
-                            choose the best option for your situation.</p>
+                        <p>We accept bank transfers, credit cards, and digital wallets. Contact us for specific
+                            details.</p>
                     </div>
                 </details>
-
                 <details class="faq-item">
-                    <summary class="faq-question">
-                        <h4>Can I view a flat before renting?</h4>
-                    </summary>
+                    <summary class="faq-question"><h4>Can I view a flat before renting?</h4></summary>
                     <div class="faq-answer">
-                        <p>Absolutely! We encourage prospective tenants to view properties before committing. You can
-                            schedule either in-person tours or virtual viewings through our website or by contacting our
-                            support team directly. Our representatives can accompany you to show the property and answer
-                            any questions you might have about the space.</p>
+                        <p>Yes, we offer both in-person and virtual tours. Schedule through our site or call
+                            support.</p>
                     </div>
                 </details>
-
                 <details class="faq-item">
-                    <summary class="faq-question">
-                        <h4>What if I need to cancel my booking?</h4>
-                    </summary>
+                    <summary class="faq-question"><h4>What if I need to cancel my booking?</h4></summary>
                     <div class="faq-answer">
-                        <p>Cancellation policies vary by property and are set by the individual property owners. Each
-                            listing includes specific cancellation terms, which we recommend reviewing before booking.
-                            If you need to cancel, contact our support team immediately for assistance. We'll work with
-                            the property owner to facilitate the process and discuss any applicable refunds.</p>
+                        <p>Policies vary by property. Contact us as soon as possible to review terms and refund
+                            options.</p>
                     </div>
                 </details>
             </article>
 
-            <footer class="faq-footer">
-                <p>Didn't find your answer? Contact our support team for personalized assistance.<a
-                            href="tel:+972594276335">Call Now </a></p>
+            <footer>
+                <p>Didn't find your answer? <a href="tel:+972594276335">Call our support team</a></p>
             </footer>
         </section>
 
+        <!-- CTA -->
         <section class="contact-cta">
             <article class="cta-content">
                 <h3>Ready to Find Your Perfect Home?</h3>
-                <p>Our team is standing by to help you discover properties that match your lifestyle and budget.</p>
+                <p>Our team is ready to help you find a space that fits your lifestyle.</p>
             </article>
         </section>
+
     </main>
 </section>
+
 <?php include 'footer.php'; ?>
 </body>
 </html>

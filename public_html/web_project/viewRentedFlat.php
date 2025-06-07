@@ -24,6 +24,7 @@ try {
         WHERE r.customer_id = :customer_id
         ORDER BY r.start_date DESC
     ");
+
     $stmt->execute(['customer_id' => $_SESSION['user_id']]);
     $rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -38,36 +39,37 @@ try {
     <meta charset="UTF-8">
     <title>My Rented Flats | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Capitalize status text for better readability */
-        .status-pending { text-transform: capitalize; }
-        .status-current { text-transform: capitalize; }
-        .status-past { text-transform: capitalize; }
-    </style>
 </head>
 <body>
+
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
 <section class="content-wrapper">
     <main class="site-main">
+
         <section class="rentals-container">
+
             <article class="rentals-header">
-                <h1 class="rentals-title">My Rented Flats</h1>
-                <a href="main.php" class="btn btn-outline">Browse Flats</a>
+                <h1>My Rented Flats</h1>
             </article>
 
+
             <?php if (isset($_SESSION['message'])): ?>
+
                 <section class="alert alert-error">
                     <span class="alert-icon">⚠️</span>
                     <span><?php echo htmlspecialchars($_SESSION['message']); ?></span>
                     <span class="alert-close" onclick="this.parentElement.style.display='none';">×</span>
                 </section>
+
                 <?php unset($_SESSION['message']); ?>
             <?php endif; ?>
 
             <?php if (!empty($rentals)): ?>
-                <table class="rental-table search-table zebra-stripe sortable">
+
+                <table class="rental-table">
+
                     <thead>
                     <tr>
                         <th>Flat Reference</th>
@@ -79,7 +81,9 @@ try {
                         <th>Owner</th>
                     </tr>
                     </thead>
+
                     <tbody>
+
                     <?php foreach ($rentals as $rental): ?>
                         <tr class="status-<?php echo htmlspecialchars($rental['status']); ?>">
                             <td>
@@ -104,14 +108,15 @@ try {
                     </tbody>
                 </table>
             <?php else: ?>
-                <div class="empty-rentals">
-                    <div class="empty-rentals-icon">🏠</div>
+                <section class="empty-rentals">
+                    <article class="empty-rentals-icon">🏠</article>
                     <h3>You have no rented flats</h3>
                     <p>Start browsing our available flats to rent one</p>
                     <a href="main.php" class="btn btn-primary">Browse Flats</a>
-                </div>
+                </section>
             <?php endif; ?>
         </section>
+
     </main>
 </section>
 

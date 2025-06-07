@@ -23,11 +23,13 @@ try {
         WHERE r.customer_id = :customer_id AND r.status = 'current'
         ORDER BY r.start_date DESC
     ");
+
     $stmt->execute(['customer_id' => $_SESSION['user_id']]);
+
     $ongoing_rentals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: Unable to fetch ongoing rentals.";
-    error_log("Database error in basket.php: " . $e->getMessage());
     $ongoing_rentals = [];
 }
 ?>
@@ -40,44 +42,52 @@ try {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
 <section class="content-wrapper">
     <main class="site-main">
+
         <section class="basket-container">
-            <article class="basket-header">
-                <h1 class="basket-title">Your Ongoing Rentals</h1>
-                <a href="main.php" class="btn btn-outline">Browse Flats</a>
-            </article>
 
             <?php if (isset($_SESSION['message'])): ?>
+
                 <section class="alert alert-error">
                     <span class="alert-icon">⚠️</span>
                     <span><?php echo htmlspecialchars($_SESSION['message']); ?></span>
                     <span class="alert-close" onclick="this.parentElement.style.display='none';">×</span>
                 </section>
+
                 <?php unset($_SESSION['message']); ?>
             <?php endif; ?>
 
             <?php if (!empty($ongoing_rentals)): ?>
+
                 <section class="basket-summary">
+
                     <article class="summary-row">
                         <span>Ongoing rentals:</span>
                         <span><?php echo count($ongoing_rentals); ?></span>
                     </article>
+
                     <?php
                     $totalCost = array_sum(array_column($ongoing_rentals, 'total_cost'));
                     ?>
-                    <div class="summary-row summary-total">
+
+                    <article class="summary-row summary-total">
                         <span>Total Cost:</span>
                         <span>$<?php echo number_format($totalCost, 2); ?></span>
-                    </div>
+                    </article>
+
                 </section>
 
                 <section class="basket-items">
+
                     <?php foreach ($ongoing_rentals as $rental): ?>
+
                         <section class="basket-item">
+
                             <article class="item-header">
                                 <h3>
                                     <a href="flatDetails.php?flat_id=<?= (int)$rental['flat_id'] ?>"
@@ -87,93 +97,115 @@ try {
                                 </h3>
                                 <span>$<?= number_format($rental['total_cost'], 2) ?></span>
                             </article>
+
                             <section class="item-body">
-                                <div class="item-image">
+
+                                <section class="item-image">
                                     <?php
                                     $stmt_photo = $pdo->prepare("SELECT photo_path FROM flat_photos WHERE flat_id = :flat_id LIMIT 1");
                                     $stmt_photo->execute(['flat_id' => $rental['flat_id']]);
                                     $photo = $stmt_photo->fetch(PDO::FETCH_ASSOC);
                                     $image_path = $photo ? 'flatImages/' . htmlspecialchars($photo['photo_path']) : 'flatImages/placeholder-image.jpg';
                                     ?>
+
                                     <img src="<?= $image_path ?>"
                                          alt="<?= htmlspecialchars($rental['reference_number']) ?>">
-                                </div>
-                                <div class="item-details">
-                                    <div class="detail-group">
+                                </section>
+
+                                <section class="item-details">
+
+                                    <article class="detail-group">
                                         <h4>Address</h4>
                                         <p class="detail-value"><?= htmlspecialchars($rental['address']) ?></p>
-                                    </div>
-                                    <div class="detail-group">
+                                    </article>
+
+                                    <article class="detail-group">
                                         <h4>Monthly Rent</h4>
                                         <p class="detail-value">$<?= number_format($rental['monthly_rent'], 2) ?></p>
-                                    </div>
-                                    <div class="detail-group">
+                                    </article>
+
+                                    <article class="detail-group">
                                         <h4>Rental Period</h4>
                                         <p class="detail-value">
                                             <?= date('M j, Y', strtotime($rental['start_date'])) ?> -
                                             <?= date('M j, Y', strtotime($rental['end_date'])) ?>
                                         </p>
-                                    </div>
-                                    <div class="detail-group">
+                                    </article>
+
+                                    <article class="detail-group">
                                         <h4>Owner</h4>
                                         <p class="detail-value"><?= htmlspecialchars($rental['owner_name'] ?? 'Unknown Owner') ?></p>
-                                    </div>
-                                </div>
+                                    </article>
+
+                                </section>
+
                             </section>
+
                             <section class="item-actions">
-                                <button class="btn btn-primary"
+                                <button class="basket-Button"
                                         onclick="openCheckoutModal(<?php echo $rental['rental_id']; ?>, '<?php echo htmlspecialchars($rental['reference_number']); ?>', <?php echo $rental['total_cost']; ?>)">
                                     Proceed to Checkout
                                 </button>
                             </section>
+
                         </section>
+
+
                     <?php endforeach; ?>
                 </section>
+
             <?php else: ?>
-                <div class="empty-basket">
-                    <div class="empty-basket-icon">🏠</div>
+
+                <section class="empty-basket">
+
+                    <article class="empty-basket-icon">🏠</article>
                     <h3>You have no ongoing rentals</h3>
                     <p>Start browsing our available flats to rent one</p>
-                    <a href="main.php" class="btn btn-primary">Browse Flats</a>
-                </div>
+                    <a href="main.php" class="btnBrowse">Browse Flats</a>
+                </section>
             <?php endif; ?>
         </section>
+
     </main>
 </section>
 
 <!-- Checkout Modal -->
-<div id="checkoutModal" class="payment-modal">
-    <div class="payment-modal-content">
-        <div class="modal-header">
-            <h2>Checkout</h2>
-            <span class="modal-close" onclick="closeCheckoutModal()">×</span>
-        </div>
-        <div id="modal-body">
-            <div class="checkout-summary">
+<section id="checkoutModal" class="payment-modal">
+    <article class="payment-modal-content">
+
+        <section id="modal-body">
+
+            <article class="checkout-summary">
                 <p><strong>Reference Number:</strong> <span id="modal-reference"></span></p>
                 <p><strong>Total Cost:</strong> $<span id="modal-total"></span></p>
-            </div>
-            <div class="payment-methods">
+            </article>
+
+            <article class="payment-methods">
                 <h3>Select Payment Method</h3>
-                <div class="payment-method">
+
+                <article class="payment-method">
                     <input type="radio" name="payment" value="credit_card" checked>
                     <label>Credit/Debit Card</label>
-                </div>
-                <div class="payment-method">
+                </article>
+
+                <article class="payment-method">
                     <input type="radio" name="payment" value="paypal">
                     <label>PayPal</label>
-                </div>
-                <div class="payment-method">
+                </article>
+
+                <article class="payment-method">
                     <input type="radio" name="payment" value="bank_transfer">
                     <label>Bank Transfer</label>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary btn-confirm" onclick="confirmCheckout()">Confirm Payment</button>
-            </div>
-        </div>
-    </div>
-</div>
+                </article>
+
+            </article>
+
+            <article class="modal-actions">
+                <button class="btnConfirm" onclick="confirmCheckout()">Confirm Payment</button>
+            </article>
+        </section>
+    </article>
+</section>
 
 <script>
     function openCheckoutModal(rentalId, referenceNumber, totalCost) {
@@ -194,7 +226,7 @@ try {
         const referenceNumber = document.getElementById('modal-reference').textContent;
 
         // Create success alert
-        const successAlert = document.createElement('div');
+        const successAlert = document.createElement('section');
         successAlert.className = 'alert-success';
         successAlert.innerHTML = `
         <span class="alert-success-icon">✅</span>

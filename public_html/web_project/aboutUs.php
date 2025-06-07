@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <?php include 'header.php'; ?>
 
 <section class="content-wrapper">
@@ -16,6 +17,7 @@
 
         <!-- Hero Section -->
         <section class="about-hero">
+
             <article class="hero-content">
                 <h1>Our Story in <span class="highlight">Sheltering Dreams</span></h1>
                 <p>From a small idea to Palestine's premier flat rental platform</p>
@@ -23,11 +25,13 @@
 
         </section>
 
+        <!-- TOP CARD -->
         <section class="mission-section">
+
             <article class="mission-card">
                 <h2>Our Mission</h2>
                 <figure>
-                    <img src="images/home.png" alt="Modern apartment building in Ramallah">
+                    <img src="images/home.png" alt="Home icon">
                 </figure>
                 <p>To simplify the rental process while creating meaningful connections between property owners and
                     tenants across Palestine.</p>
@@ -86,11 +90,13 @@
             <h2>About <span class="highlight">Me</span></h2>
             <p class="section-intro">Founder and dedicated to revolutionizing rentals in Palestine.</p>
 
-            <div class="profile-card">
-                <div class="profile-photo">
+            <section class="profile-card">
+
+                <article class="profile-photo">
                     <img src="images/Ayman.jpg" alt="Ayman Alqayem" loading="lazy">
-                </div>
-                <div class="profile-info">
+                </article>
+
+                <section class="profile-info">
                     <h3>Ayman Alqayem</h3>
                     <p>Founder & CEO</p>
                     <nav class="member-social">
@@ -98,8 +104,10 @@
                             <img src="images/linkedin.png" alt="LinkedIn">
                         </a>
                     </nav>
-                </div>
-            </div>
+                </section>
+
+            </section>
+
         </section>
 
         <!-- Values Section -->
@@ -149,6 +157,8 @@
         </section>
     </main>
 </section>
+
+
 <?php include 'footer.php'; ?>
 </body>
 </html>

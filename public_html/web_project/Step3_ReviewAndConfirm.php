@@ -13,22 +13,20 @@ if (!isset($_SESSION['step1']) || !isset($_SESSION['step2'])) {
 $confirmation_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['step'] == '3') {
-    // Verify passwords match
-    if ($_SESSION['step2']['password'] !== $_SESSION['step2']['confirm_password']) {
-        die("Error: Passwords do not match");
-    }
 
     try {
         $pdo = getPDOConnection();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Generate 9-digit numeric ID
         $random_id = str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT);
+
         $generated_id = $random_id;
 
         // Set role-specific ID based on user type
         $user_type = strtolower($_SESSION['user_type'] ?? 'customer');
+
         $customer_id = $user_type === 'customer' ? $generated_id : null;
+
         $owner_id = $user_type === 'owner' ? $generated_id : null;
 
         $stmt = $pdo->prepare("
@@ -76,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         $_SESSION['registration_success'] = [
             'name' => $_SESSION['step1']['name'],
             'user_type' => $user_type,
-            'user_id' => $user_id, // Numeric user_id for messages
-            'role_id' => $generated_id // 9-digit customer_id or owner_id
+            'user_id' => $user_id,
+            'role_id' => $generated_id
         ];
 
         // Clear session data after successful registration
@@ -100,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
 <head>
     <meta charset="UTF-8">
     <title>Registration - Step 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -107,8 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
 <?php include 'nav.php'; ?>
 
 <section class="content-wrapper">
+
     <main class="site-main">
+
         <section class="registration-container">
+
             <nav class="progress-steps" aria-label="Registration progress">
                 <span class="step completed">✓</span>
                 <span class="step completed">✓</span>
@@ -121,35 +123,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
             </header>
 
             <form action="Step3_ReviewAndConfirm.php" method="POST" class="registration-form">
+
                 <input type="hidden" name="step" value="3">
 
                 <section class="form-section">
+
                     <h2 class="form-section-title">Personal Details</h2>
+
                     <section class="review-group">
+
                         <section class="review-item">
                             <span class="review-icon">👤</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>User Type</dt>
                                 <dd><?= htmlspecialchars($_SESSION['user_type'] ?? 'Customer') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">🪪</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>National ID</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step1']['national_id'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">👤</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Full Name</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step1']['name'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">🏠</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Address</dt>
                                 <dd>
                                     <?= htmlspecialchars($_SESSION['step1']['flat_no'] ?? '') ?>,
@@ -157,36 +166,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                                     <?= htmlspecialchars($_SESSION['step1']['city'] ?? '') ?>,
                                     <?= htmlspecialchars($_SESSION['step1']['postal_code'] ?? '') ?>
                                 </dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">🎂</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Date of Birth</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step1']['dob'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">📧</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Email (for login)</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <section class="review-item">
                             <span class="review-icon">📱</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Mobile</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step1']['mobile'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
+
                         <?php if (!empty($_SESSION['step1']['telephone'])): ?>
                             <section class="review-item">
                                 <span class="review-icon">☎️</span>
-                                <div class="review-content">
+                                <dl class="review-content">
                                     <dt>Telephone</dt>
                                     <dd><?= htmlspecialchars($_SESSION['step1']['telephone'] ?? '') ?></dd>
-                                </div>
+                                </dl>
                             </section>
                         <?php endif; ?>
                     </section>
@@ -195,52 +208,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 <?php if (strtolower($_SESSION['user_type'] ?? 'customer') === 'owner'): ?>
                     <section class="form-section">
                         <h2 class="form-section-title">Bank Details</h2>
+
                         <section class="review-group">
+
                             <section class="review-item">
                                 <span class="review-icon">🏦</span>
-                                <div class="review-content">
+                                <dl class="review-content">
                                     <dt>Bank Name</dt>
                                     <dd><?= htmlspecialchars($_SESSION['step1']['bank_name'] ?? '') ?></dd>
-                                </div>
+                                </dl>
                             </section>
+
                             <section class="review-item">
                                 <span class="review-icon">🏦</span>
-                                <div class="review-content">
+                                <dl class="review-content">
                                     <dt>Bank Branch</dt>
                                     <dd><?= htmlspecialchars($_SESSION['step1']['bank_branch'] ?? '') ?></dd>
-                                </div>
+                                </dl>
                             </section>
+
                             <section class="review-item">
                                 <span class="review-icon">💳</span>
-                                <div class="review-content">
+                                <dl class="review-content">
                                     <dt>Account Number</dt>
                                     <dd><?= htmlspecialchars($_SESSION['step1']['bank_account'] ?? '') ?></dd>
-                                </div>
+                                </dl>
                             </section>
+
                         </section>
                     </section>
                 <?php endif; ?>
 
                 <section class="form-section">
                     <h2 class="form-section-title">Account Details</h2>
+
                     <section class="review-group">
                         <section class="review-item">
                             <span class="review-icon">📧</span>
-                            <div class="review-content">
+                            <dl class="review-content">
                                 <dt>Login Email</dt>
                                 <dd><?= htmlspecialchars($_SESSION['step2']['email'] ?? '') ?></dd>
-                            </div>
+                            </dl>
                         </section>
                     </section>
                 </section>
 
                 <section class="form-actions">
-                    <button type="button" class="btn btn-back"
+                    <button type="button" class="nextButton"
                             onclick="window.location.href='Step2_AccountCreation.php'">← Back
                     </button>
-                    <button type="submit" class="btn btn-confirm">Confirm Registration</button>
+                    <button type="submit" class="confirm">Confirm Registration</button>
                 </section>
             </form>
+
+
         </section>
     </main>
 </section>

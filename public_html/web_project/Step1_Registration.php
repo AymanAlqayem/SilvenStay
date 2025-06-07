@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once 'dbconfig.inc.php';
@@ -25,8 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         'bank_branch' => $_POST['bank_branch'] ?? '',
         'bank_account' => $_POST['bank_account'] ?? ''
     ];
+
     $_SESSION['step1'] = $step1;
+
     $_SESSION['user_type'] = $_POST['user_type'] ?? 'Customer';
+
     $user_type = $_SESSION['user_type'];
 
     // Validate required fields
@@ -36,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
     ];
 
     $errors = [];
+
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             $errors[] = ucfirst(str_replace('_', ' ', $field)) . " is required";
@@ -52,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
         }
     }
 
-    // Check email uniqueness
+    // Check email uniqueness.
     $email = $_POST['email'] ?? '';
     $email_error = '';
     if (!empty($email)) {
@@ -77,20 +82,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Registration - Step 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
+
 <section class="content-wrapper">
+
     <main class="site-main">
+
         <section class="registration-container">
+
             <nav class="progress-steps" aria-label="Registration progress">
                 <span class="step active">1</span>
                 <span class="step">2</span>
@@ -101,23 +112,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 <h1>Personal Details</h1>
             </header>
 
+
             <?php if (!empty($email_error)): ?>
-                <div class="alert alert-error">
+
+                <section class="alert alert-error">
                     <span class="alert-icon">⚠</span>
                     <span><?= htmlspecialchars($email_error) ?></span>
                     <span class="alert-close" onclick="this.parentElement.style.display='none';">×</span>
-                </div>
+                </section>
+
             <?php endif; ?>
 
+
             <?php if (!empty($errors)): ?>
-                <div class="error-message">
+                <section class="error-message">
                     <?php foreach ($errors as $error): ?>
                         <p><?= htmlspecialchars($error) ?></p>
                     <?php endforeach; ?>
-                </div>
+                </section>
             <?php endif; ?>
 
+            <!-- Information Form -->
+
             <form action="Step1_Registration.php" method="POST" class="registration-form">
+
                 <input type="hidden" name="step" value="1">
 
                 <fieldset class="form-group">
@@ -127,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                         <option value="Owner" <?= $user_type === 'Owner' ? 'selected' : '' ?>>Owner</option>
                     </select>
                 </fieldset>
+
 
                 <fieldset class="form-group">
                     <label for="national_id" class="form-label required">National ID</label>
@@ -162,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 <fieldset class="form-group">
                     <label for="postal_code" class="form-label required">Postal Code</label>
                     <input type="text" id="postal_code" name="postal_code" class="form-input" required
+                           maxlength="10"
                            value="<?= htmlspecialchars($step1['postal_code'] ?? '') ?>">
                 </fieldset>
 
@@ -213,12 +233,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['step']) && $_POST['st
                 </section>
 
                 <section class="form-actions">
-                    <button type="submit" class="btn btn-next">Next Step →</button>
+                    <button type="submit" class="nextButton">Next Step →</button>
                 </section>
+
             </form>
         </section>
+
+
     </main>
 </section>
+
 
 <script>
     function toggleBankDetails() {

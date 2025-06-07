@@ -35,10 +35,12 @@ try {
         'telephone' => $user['telephone_number'],
         'profile_photo' => $user['profile_photo']
     ];
+
     $_SESSION['customer_id'] = $user['customer_id'];
     $_SESSION['owner_id'] = $user['owner_id'];
     $_SESSION['manager_id'] = $user['manager_id'] ?? null;
     $_SESSION['user_type'] = $user['user_type'];
+
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: " . $e->getMessage();
     error_log("Profile fetch failed: " . $e->getMessage());
@@ -80,7 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check email uniqueness (excluding current user)
+
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email AND user_id != :user_id");
+
     $stmt->execute(['email' => $email, 'user_id' => $_SESSION['user_id']]);
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['error_type'] = 'email';
@@ -249,37 +253,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <section class="content-wrapper">
     <main class="site-main">
-        <div class="registration-container">
+        <section class="registration-container">
+
             <?php if (isset($_SESSION['message'])): ?>
-                <div class="alert alert-error">
+
+                <article class="alert alert-error">
                     <span class="alert-icon">⚠️</span>
                     <span><?= htmlspecialchars($_SESSION['message']) ?></span>
                     <span class="alert-close" onclick="this.parentElement.style.display='none'">×</span>
-                </div>
+                </article>
+
                 <?php unset($_SESSION['message']);
+
                 unset($_SESSION['error_type']); ?>
             <?php endif; ?>
 
-            <div class="profile-header">
-                <div class="profile-avatar">
+            <section class="profile-header">
+
+                <article class="profile-avatar">
                     <?php if (!empty($user['profile_photo'])): ?>
                         <img src="images/<?= htmlspecialchars($user['profile_photo']) ?>" alt="Profile Photo"
                              class="profile-photo">
                     <?php else: ?>
                         <?= substr(htmlspecialchars($user['name'] ?? ''), 0, 1) ?>
                     <?php endif; ?>
-                </div>
-                <div class="profile-info">
+                </article>
+
+                <section class="profile-info">
                     <h1><?= htmlspecialchars($user['name'] ?? '') ?></h1>
                     <p>Member since <?= date('F Y', strtotime($user['registration_date'] ?? 'now')) ?></p>
-                </div>
-            </div>
+                </section>
+
+            </section>
 
             <form action="profile.php" method="POST" class="registration-form" enctype="multipart/form-data">
+
                 <section class="form-section">
+
                     <h2 class="form-section-title">Personal Information</h2>
 
-                    <div class="form-grid">
+                    <section class="form-grid">
+
                         <fieldset class="form-group">
                             <label class="form-label">User ID</label>
                             <input type="text" class="form-input" readonly
@@ -287,23 +301,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </fieldset>
 
                         <?php if ($user['user_type'] === 'customer'): ?>
+
                             <fieldset class="form-group">
                                 <label class="form-label">Customer ID</label>
                                 <input type="text" class="form-input" readonly
                                        value="<?= htmlspecialchars($user['customer_id']) ?>">
                             </fieldset>
+
                         <?php elseif ($user['user_type'] === 'owner'): ?>
+
                             <fieldset class="form-group">
                                 <label class="form-label">Owner ID</label>
                                 <input type="text" class="form-input" readonly
                                        value="<?= htmlspecialchars($user['owner_id']) ?>">
                             </fieldset>
+
                         <?php elseif ($user['user_type'] === 'manager'): ?>
+
                             <fieldset class="form-group">
                                 <label class="form-label">Manager ID</label>
                                 <input type="text" class="form-input" readonly
                                        value="<?= htmlspecialchars($user['manager_id']) ?>">
                             </fieldset>
+
                         <?php endif; ?>
 
                         <fieldset class="form-group">
@@ -391,12 +411,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                        value="<?= htmlspecialchars($user['account_number']) ?>">
                             </fieldset>
                         <?php endif; ?>
-                    </div>
+                    </section>
 
                     <button type="submit" class="form-button">Update Profile</button>
                 </section>
             </form>
-        </div>
+        </section>
     </main>
 </section>
 

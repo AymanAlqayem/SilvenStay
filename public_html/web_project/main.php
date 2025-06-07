@@ -4,6 +4,7 @@ require_once 'dbconfig.inc.php';
 
 // Pagination setup
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
 $limit = 9; // 9 flats per page
 $offset = ($page - 1) * $limit;
 
@@ -58,9 +59,9 @@ try {
 <body>
 
 <?php include 'header.php'; ?>
+<?php include 'nav.php'; ?>
 
-<div class="content-wrapper">
-    <?php include 'nav.php'; ?>
+<section class="content-wrapper">
 
     <main class="site-main">
         <?php if (isset($_SESSION['message'])): ?>
@@ -71,12 +72,15 @@ try {
         <?php endif; ?>
 
         <section class="promotional">
+
             <h2>Available Flats</h2>
 
             <article class="promotion-grid">
                 <?php if (count($flats) === 0): ?>
                     <p>No flats found.</p>
+
                 <?php else: ?>
+
                     <?php foreach ($flats as $flat): ?>
                         <a href="flatDetails.php?flat_id=<?= (int)$flat['flat_id'] ?>" class="promotion-card">
                             <img src="flatImages/<?= htmlspecialchars($flat['photo'] ?? 'default.jpg') ?>"
@@ -97,17 +101,17 @@ try {
                 <?php endif; ?>
             </article>
 
-            <div class="pagination" aria-label="Pagination Navigation">
+            <section class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="?page=<?= $page - 1 ?>" class="btn" aria-label="Previous Page">Previous</a>
+                    <a href="?page=<?= $page - 1 ?>" class="pag-button">Previous</a>
                 <?php endif; ?>
                 <?php if ($page < $totalPages): ?>
-                    <a href="?page=<?= $page + 1 ?>" class="btn" aria-label="Next Page">Next</a>
+                    <a href="?page=<?= $page + 1 ?>" class="pag-button">Next</a>
                 <?php endif; ?>
-            </div>
+            </section>
         </section>
     </main>
-</div>
+</section>
 
 <?php include 'footer.php'; ?>
 

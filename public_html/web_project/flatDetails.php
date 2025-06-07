@@ -33,6 +33,7 @@ try {
     $photoStmt = $pdo->prepare("SELECT photo_path FROM flat_photos WHERE flat_id = :flat_id");
     $photoStmt->execute(['flat_id' => $flat_id]);
     $photos = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: Unable to fetch flat details.";
     error_log("Database error in flatDetails.php: " . $e->getMessage());
@@ -54,16 +55,23 @@ try {
 <?php include 'nav.php'; ?>
 
 <main class="site-main">
+
     <h2><?= htmlspecialchars($flat['title'] ?? 'Flat ' . $flat['reference_number']) ?></h2>
+
     <p><strong>Location:</strong> <?= htmlspecialchars($flat['location']) ?> - <?= htmlspecialchars($flat['address']) ?>
     </p>
+
     <p><strong>Rent:</strong> $<?= number_format($flat['monthly_rent'], 2) ?>/month</p>
+
     <p><strong>Size:</strong> <?= (int)$flat['size_sqm'] ?> sqm | <?= (int)$flat['bedrooms'] ?> BR
         | <?= (int)$flat['bathrooms'] ?> BA</p>
+
     <p><strong>Available From:</strong> <?= htmlspecialchars($flat['available_from']) ?></p>
+
     <p><strong>Owner:</strong> <?= htmlspecialchars($flat['owner_name'] ?? 'Unknown Owner') ?></p>
 
     <section class="photo-slider">
+
         <?php if (!empty($photos)): ?>
             <?php foreach ($photos as $photo): ?>
                 <img src="flatImages/<?= htmlspecialchars($photo['photo_path']) ?>" alt="Flat photo">
@@ -105,10 +113,10 @@ try {
     <?php endif; ?>
 
     <!-- Action Buttons -->
-    <div class="rent-buttons">
+    <section class="rent-buttons">
         <a href="rent.php?id=<?= (int)$flat_id ?>">Rent this Flat</a>
         <a href="requestAppointment.php?id=<?= (int)$flat_id ?>">Request Appointment</a>
-    </div>
+    </section>
 
 </main>
 

@@ -203,72 +203,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
 <?php include 'nav.php'; ?>
 
 <main class="site-main">
+
     <h2>Rent <?= htmlspecialchars($flat['title']) ?></h2>
 
     <?php if ($already_rented): ?>
-        <div class="error">
+        <section class="error">
             <p>You have already rented this flat. Please check your rentals for more info.</p>
-        </div>
+        </section>
+
     <?php elseif (!empty($errors)): ?>
-        <div class="error">
+
+        <section class="error">
             <ul>
                 <?php foreach ($errors as $error): ?>
                     <li><?= htmlspecialchars($error) ?></li>
                 <?php endforeach; ?>
             </ul>
-        </div>
+        </section>
+
     <?php elseif ($success): ?>
-        <div class="success">
+        <section class="success">
             <p>Rental request submitted successfully!</p>
             <p><?= nl2br(htmlspecialchars($customer_message)) ?></p>
             <p><?= nl2br(htmlspecialchars($owner_message)) ?></p>
-        </div>
+        </section>
+
     <?php endif; ?>
 
     <?php if (!$already_rented && !$success): ?>
+
         <form method="post" novalidate>
+
             <fieldset disabled>
                 <legend>Flat Details</legend>
-                <div class="form-group"><label>Reference:</label><input
-                            value="<?= htmlspecialchars($flat['reference_number']) ?>"></div>
-                <div class="form-group"><label>Location:</label><input
-                            value="<?= htmlspecialchars($flat['location']) ?>"></div>
-                <div class="form-group"><label>Address:</label><input value="<?= htmlspecialchars($flat['address']) ?>">
-                </div>
-                <div class="form-group"><label>Bedrooms:</label><input
-                            value="<?= htmlspecialchars($flat['bedrooms']) ?>"></div>
-                <div class="form-group"><label>Bathrooms:</label><input
-                            value="<?= htmlspecialchars($flat['bathrooms']) ?>"></div>
-                <div class="form-group"><label>Monthly Rent:</label><input
-                            value="$<?= htmlspecialchars(number_format($flat['monthly_rent'], 2)) ?>"></div>
+
+                <article class="form-group"><label>Reference:</label><input
+                            value="<?= htmlspecialchars($flat['reference_number']) ?>"></article>
+
+                <article class="form-group"><label>Location:</label><input
+                            value="<?= htmlspecialchars($flat['location']) ?>"></article>
+
+                <article class="form-group"><label>Address:</label><input
+                            value="<?= htmlspecialchars($flat['address']) ?>">
+                </article>
+
+                <article class="form-group"><label>Bedrooms:</label><input
+                            value="<?= htmlspecialchars($flat['bedrooms']) ?>"></article>
+
+                <article class="form-group"><label>Bathrooms:</label><input
+                            value="<?= htmlspecialchars($flat['bathrooms']) ?>"></article>
+
+                <article class="form-group"><label>Monthly Rent:</label>
+                    <input
+                            value="$<?= htmlspecialchars(number_format($flat['monthly_rent'], 2)) ?>"></article>
             </fieldset>
 
             <fieldset>
                 <legend>Rental Period</legend>
-                <div class="form-group">
+                <article class="form-group">
                     <label for="start_date">Start Date:</label>
                     <input type="date" name="start_date" required/>
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label for="end_date">End Date:</label>
                     <input type="date" name="end_date" required/>
-                </div>
+                </article>
+
             </fieldset>
 
             <fieldset>
                 <legend>Payment</legend>
-                <div class="form-group">
+
+                <article class="form-group">
                     <label for="card_number">Card Number (9 digits):</label>
                     <input type="text" name="card_number" maxlength="9" pattern="\d{9}" required/>
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label for="expiry">Expiry (YYYY-MM):</label>
                     <input type="month" name="expiry" required/>
-                </div>
-                <div class="form-group">
+                </article>
+
+                <article class="form-group">
                     <label for="card_name">Name on Card:</label>
                     <input type="text" name="card_name" required/>
-                </div>
+                </article>
+
             </fieldset>
 
             <button type="submit">Confirm Rent</button>

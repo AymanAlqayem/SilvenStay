@@ -2,7 +2,7 @@
 session_start();
 require_once 'dbconfig.inc.php';
 
-// Check if user_id is provided
+// Validate user_id
 if (!isset($_GET['user_id']) || !is_numeric($_GET['user_id'])) {
     $_SESSION['message'] = "Invalid user ID.";
     header("Location: viewRentedFlat.php");
@@ -12,7 +12,6 @@ if (!isset($_GET['user_id']) || !is_numeric($_GET['user_id'])) {
 $pdo = getPDOConnection();
 
 try {
-    // Fetch user details (handles both owner and customer)
     $stmt = $pdo->prepare("
         SELECT name, city, mobile_number, email, user_type
         FROM users
@@ -27,8 +26,9 @@ try {
         exit;
     }
 
-    // Format phone number if exists
-    $phoneNumber = $user['mobile_number'] ? preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', $user['mobile_number']) : 'Not provided';
+    $phoneNumber = $user['mobile_number']
+        ? preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', $user['mobile_number'])
+        : 'Not provided';
 
 } catch (PDOException $e) {
     $_SESSION['message'] = "Database error: " . htmlspecialchars($e->getMessage());
@@ -41,93 +41,53 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?> Details | SilvenStay</title>
+    <title><?= ucfirst($user['user_type']) ?> Info | SilvenStay</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<?php include 'header.php'; ?>
-<?php include 'nav.php'; ?>
 
-<section class="content-wrapper">
-    <main class="site-main">
-        <div class="user-profile-container">
-            <div class="<?php echo $user['user_type'] === 'owner' ? 'owner-card' : 'customer-card'; ?>">
-                <div class="user-header">
-                    <div class="user-avatar <?php echo $user['user_type'] === 'owner' ? 'owner-avatar' : 'customer-avatar'; ?>">
-                        <?php
-                        $initials = '';
-                        $nameParts = explode(' ', $user['name']);
-                        foreach ($nameParts as $part) {
-                            $initials .= strtoupper(substr($part, 0, 1));
-                        }
-                        echo htmlspecialchars($initials);
-                        ?>
-                    </div>
-                    <div class="user-title">
-                        <h2><?php echo htmlspecialchars($user['name']); ?></h2>
-                        <p class="user-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <?php echo htmlspecialchars($user['city'] ?: 'Location not specified'); ?>
-                        </p>
-                    </div>
-                </div>
+<main class="card-wrapper">
+    <section class="user-single-card <?= $user['user_type'] ?>">
 
-                <div class="user-details">
-                    <div class="detail-item">
-                        <div class="detail-icon">📞</div>
-                        <div class="detail-content">
-                            <h4>Contact Number</h4>
-                            <p><?php echo htmlspecialchars($phoneNumber); ?></p>
-                        </div>
-                    </div>
+        <header class="card-header">
+            <h2><?= htmlspecialchars($user['name']) ?></h2>
+        </header>
 
-                    <div class="detail-item">
-                        <div class="detail-icon">✉️</div>
-                        <div class="detail-content">
-                            <h4>Email Address</h4>
-                            <p>
-                                <a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" class="email-link">
-                                    <?php echo htmlspecialchars($user['email']); ?>
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <section class="card-details">
 
-                <div class="user-actions">
-                    <a href="mailto:<?php echo htmlspecialchars($user['email']); ?>" class="contact-button">
-                        Contact <?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?>
-                    </a>
-                </div>
-            </div>
+            <article class="info-row">
+                <span class="icon">📞</span>
+                <article>
+                    <h4>Phone</h4>
+                    <p><?= htmlspecialchars($phoneNumber) ?></p>
+                </article>
 
-            <div class="<?php echo $user['user_type'] === 'owner' ? 'owner-testimonial' : 'customer-testimonial'; ?>">
-                <div class="testimonial-header">
-                    <span class="testimonial-icon">“</span>
-                    <h3>About This <?php echo $user['user_type'] === 'owner' ? 'Owner' : 'Customer'; ?></h3>
-                </div>
-                <p class="testimonial-content">
-                    <?php
-                    echo $user['user_type'] === 'owner'
-                        ? 'This owner is a trusted member of our community, maintaining high standards for their properties and committed to providing excellent service to their tenants.'
-                        : 'This customer is a valued member of our community, known for their reliability and positive engagement with property owners.';
-                    ?>
-                </p>
-                <div class="trust-badges">
-                    <div class="badge">
-                        <span class="badge-icon">✔️</span>
-                        <span>Verified Member</span>
-                    </div>
-                    <div class="badge">
-                        <span class="badge-icon">🛡️</span>
-                        <span>Secure Communication</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-</section>
+            </article>
 
-<?php include 'footer.php'; ?>
+            <section class="info-row">
+
+                <span class="icon">✉️</span>
+
+                <article>
+                    <h4>Email</h4>
+                    <p>
+                        <a href="mailto:<?= htmlspecialchars($user['email']) ?>" class="email-link">
+                            <?= htmlspecialchars($user['email']) ?>
+                        </a>
+                    </p>
+                </article>
+
+            </section>
+        </section>
+
+        <footer class="card-footer">
+
+            <a href="mailto:<?= htmlspecialchars($user['email']) ?>" class="contact-button">
+                Contact <?= ucfirst($user['user_type']) ?>
+            </a>
+        </footer>
+    </section>
+</main>
+
 </body>
 </html>

@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Initialize toggle state for profile card
+// Initialize toggle state for profile card.
 $show_card = isset($_POST['toggle_card']) && $_POST['toggle_card'] === 'show' ? 'show' : '';
 
 // Get username from session
@@ -39,6 +39,7 @@ $header_links = [
 ?>
 
 <header class="site-header">
+
     <section class="logo-section">
         <img src="images/logo.png" alt="SilvenStay Logo" class="logo">
         <h1>SilvenStay For Flat Rent.</h1>

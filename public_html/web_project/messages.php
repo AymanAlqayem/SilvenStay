@@ -246,16 +246,22 @@ try {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 
 <section class="content-wrapper">
+
     <main class="site-main">
-        <div class="messages-container">
-            <div class="messages-header">
+
+        <section class="messages-container">
+
+            <section class="messages-header">
+
                 <h2>Inbox for User ID: <?php echo htmlspecialchars($userId); ?>
                     (<?php echo htmlspecialchars($userType); ?>)</h2>
-                <div class="messages-controls">
+
+                <section class="messages-controls">
                     <form class="search-form" method="GET" action="">
                         <input
                                 type="text"
@@ -265,31 +271,32 @@ try {
                                 autocomplete="off"
                         />
                     </form>
-                </div>
-            </div>
+                </section>
+            </section>
 
             <?php if (!empty($errors)): ?>
-                <div class="error">
+                <section class="error">
                     <ul>
                         <?php foreach ($errors as $error): ?>
                             <li><?php echo htmlspecialchars($error); ?></li>
                         <?php endforeach; ?>
                     </ul>
-                </div>
+                </section>
+
             <?php endif; ?>
 
             <?php if ($success_message): ?>
-                <div class="success">
+                <section class="success">
                     <p><?php echo htmlspecialchars($success_message); ?></p>
-                </div>
+                </section>
             <?php endif; ?>
 
             <?php if (empty($messages)): ?>
-                <div class="empty-messages">
-                    <div class="empty-icon">📭</div>
+                <section class="empty-messages">
+                    <article class="empty-icon">📭</article>
                     <h3>No messages found</h3>
                     <p>You have no messages at the moment.</p>
-                </div>
+                </section>
             <?php else: ?>
                 <table class="messages-table">
                     <thead>
@@ -363,7 +370,7 @@ try {
                     </tbody>
                 </table>
             <?php endif; ?>
-        </div>
+        </section>
     </main>
 </section>
 

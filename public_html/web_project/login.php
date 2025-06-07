@@ -19,19 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute(['email' => $email, 'password' => $password]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-//            if ($user) {
-//                // Successful login
-//                $_SESSION['is_registered'] = true;
-//                $_SESSION['user_id'] = $user['user_id']; // Numeric user_id for messages and profile
-//                $_SESSION['user_type'] = $user['user_type'];
-//                $_SESSION['step1']['name'] = $user['name'];
-//                // Store role-specific ID (9-digit customer_id or owner_id)
-//                $role_id = $user[$user['user_type'] . '_id'];
-//                $_SESSION['role_id'] = $role_id;
-//                header("Location: main.php");
-//                exit;
-//            }
-
             if ($user) {
                 // Successful login
                 $_SESSION['is_registered'] = true;
@@ -68,37 +55,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <main class="login-container">
+
     <section class="login-left">
+
         <article class="login-header">
             <h1>Welcome back!</h1>
             <p>Please login to your account</p>
         </article>
 
         <form action="login.php" method="POST" class="login-form">
+
             <?php if (isset($_SESSION['login_error'])): ?>
-                <div class="alert alert-error">
+
+                <article class="alert alert-error">
                     <?= htmlspecialchars($_SESSION['login_error']); ?>
                     <?php unset($_SESSION['login_error']); ?>
-                </div>
+                </article>
+
             <?php endif; ?>
 
             <section class="input-group">
+
                 <label for="username">Email</label>
                 <input type="email" id="username" name="username" required
                        placeholder="Enter your email" autofocus>
+
             </section>
 
             <section class="input-group">
+
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required
                        placeholder="Enter your password">
                 <span class="toggle-password"></span>
-            </section>
 
-            <section class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" name="remember"> Remember me
-                </label>
             </section>
 
             <button type="submit" class="btn-login">Login</button>
@@ -106,16 +96,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <section class="register-link">
                 Don't have an account? <a href="Step1_Registration.php">Register here</a>
             </section>
+
         </form>
     </section>
 
+
     <aside class="login-right">
-        <div class="welcome-message">
+        <article class="welcome-message">
             <h2>New to Our Platform?</h2>
             <p>Join thousands of happy customers who found their perfect home through us</p>
             <a href="Step1_Registration.php" class="btn-register">Create Account</a>
-        </div>
+        </article>
     </aside>
+
 </main>
 </body>
 </html>
