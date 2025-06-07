@@ -16,7 +16,7 @@ try {
     $sort_order = isset($_GET['order']) && $_GET['order'] === 'desc' ? 'DESC' : 'ASC';
 
     // Build SQL query
-    $sql = "SELECT f.reference_number, f.monthly_rent, f.available_from, f.location, f.bedrooms, 
+    $sql = "SELECT f.flat_id, f.reference_number, f.monthly_rent, f.available_from, f.location, f.bedrooms, 
                    (SELECT photo_path FROM flat_photos fp WHERE fp.flat_id = f.flat_id LIMIT 1) AS photo_path
             FROM flats f
             WHERE f.status != 'rented'";
@@ -61,17 +61,10 @@ try {
     }
     $sql .= " ORDER BY f.$sort_column $sort_order";
 
-    // Debug: Output the query and parameters
-    // echo "SQL Query: $sql<br>";
-    // echo "Parameters: " . print_r($params, true) . "<br>";
-
     // Prepare and execute query
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Debug: Output result count
-    // echo "Result count: " . count($result) . "<br>";
 
     // Fetch unique locations for dropdown
     $locations_query = "SELECT DISTINCT location FROM flats WHERE status != 'rented' ORDER BY location";
@@ -190,7 +183,7 @@ try {
                             <td><?php echo htmlspecialchars($row['bedrooms']); ?></td>
                             <td>
                                 <?php if ($row['photo_path']): ?>
-                                    <a href="flatDetails.php?ref=<?php echo urlencode($row['reference_number']); ?>"
+                                    <a href="flatDetails.php?flat_id=<?php echo urlencode($row['flat_id']); ?>"
                                        target="_blank">
                                         <img src="flatImages/<?php echo htmlspecialchars($row['photo_path']); ?>" alt="Flat Photo"
                                              class="table-image">
