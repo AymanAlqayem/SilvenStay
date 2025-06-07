@@ -20,6 +20,7 @@ try {
     $future_date = isset($_GET['future_date']) ? $_GET['future_date'] : '';
     $owner_id = isset($_GET['owner_id']) ? (int)$_GET['owner_id'] : '';
     $customer_id = isset($_GET['customer_id']) ? (int)$_GET['customer_id'] : '';
+    $status = isset($_GET['status']) ? $_GET['status'] : '';
     $sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'monthly_rent';
     $sort_order = isset($_GET['order']) && $_GET['order'] === 'desc' ? 'DESC' : 'ASC';
 
@@ -40,20 +41,21 @@ try {
     $customers_stmt = $pdo->query($customers_query);
     $customers = $customers_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Build SQL query for rented flats
+    // Build SQL query for all flats except rejected
     $sql = "SELECT f.flat_id, f.reference_number, f.monthly_rent, rh.start_date, rh.end_date, f.location,
                    o.name AS owner_name, o.user_id AS owner_id,
-                   c.name AS customer_name, c.user_id AS customer_id
+                   c.name AS customer_name, c.user_id AS customer_id,
+                   f.status
             FROM flats f
-            INNER JOIN rentals rh ON f.flat_id = rh.flat_id
             INNER JOIN users o ON f.owner_id = o.user_id
-            INNER JOIN users c ON rh.customer_id = c.user_id
-            WHERE rh.status = 'current'";
+            LEFT JOIN rentals rh ON f.flat_id = rh.flat_id
+            LEFT JOIN users c ON rh.customer_id = c.user_id
+            WHERE f.status IN ('pending', 'approved', 'rented')";
     $params = [];
 
     // Apply filters
     if ($start_date) {
-        $sql .= " AND rh.start_date >= :start_date";
+        $sql .= " AND (rh.start_date >= :start_date OR rh.start_date IS NULL)";
         $params[':start_date'] = $start_date;
     }
     if ($end_date) {
@@ -76,9 +78,13 @@ try {
         $sql .= " AND rh.customer_id = :customer_id";
         $params[':customer_id'] = $customer_id;
     }
+    if ($status && $status !== 'Any') {
+        $sql .= " AND f.status = :status";
+        $params[':status'] = $status;
+    }
 
     // Sorting
-    $valid_columns = ['reference_number', 'monthly_rent', 'start_date', 'end_date', 'location', 'owner_name', 'customer_name'];
+    $valid_columns = ['reference_number', 'monthly_rent', 'start_date', 'end_date', 'location', 'owner_name', 'customer_name', 'status'];
     if (!in_array($sort_column, $valid_columns)) {
         $sort_column = 'monthly_rent';
     }
@@ -161,6 +167,15 @@ try {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="status">Flat Status</label>
+                        <select name="status" id="status">
+                            <option value="Any" <?php echo $status === 'Any' ? 'selected' : ''; ?>>Any Status</option>
+                            <option value="pending" <?php echo $status === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                            <option value="approved" <?php echo $status === 'approved' ? 'selected' : ''; ?>>Approved</option>
+                            <option value="rented" <?php echo $status === 'rented' ? 'selected' : ''; ?>>Rented</option>
+                        </select>
+                    </div>
                     <div class="form-group submit-group">
                         <button type="submit" class="submit-button">Search Flats</button>
                     </div>
@@ -178,7 +193,8 @@ try {
                         'end_date' => 'Rental End',
                         'location' => 'Location',
                         'owner_name' => 'Owner',
-                        'customer_name' => 'Customer'
+                        'customer_name' => 'Customer',
+                        'status' => 'Status'
                     ];
                     foreach ($columns as $col => $label) {
                         $new_order = ($sort_column === $col && $sort_order === 'ASC') ? 'desc' : 'asc';
@@ -186,7 +202,8 @@ try {
                         echo "<th><a href='?sort=$col&order=$new_order&start_date=" . urlencode($start_date) .
                             "&end_date=" . urlencode($end_date) . "&location=" . urlencode($location) .
                             "&future_date=" . urlencode($future_date) . "&owner_id=" . urlencode($owner_id) .
-                            "&customer_id=" . urlencode($customer_id) . "' class='sort-link'>$label $icon</a></th>";
+                            "&customer_id=" . urlencode($customer_id) . "&status=" . urlencode($status) .
+                            "' class='sort-link'>$label $icon</a></th>";
                     }
                     ?>
                 </tr>
@@ -202,7 +219,7 @@ try {
                                 </a>
                             </td>
                             <td>£<?php echo number_format($row['monthly_rent'], 2); ?></td>
-                            <td><?php echo htmlspecialchars($row['start_date']); ?></td>
+                            <td><?php echo htmlspecialchars($row['start_date'] ?: '-'); ?></td>
                             <td><?php echo htmlspecialchars($row['end_date'] ?: 'Ongoing'); ?></td>
                             <td><?php echo htmlspecialchars($row['location']); ?></td>
                             <td>
@@ -212,16 +229,21 @@ try {
                                 </a>
                             </td>
                             <td>
-                                <a href="userCard.php?user_id=<?php echo $row['customer_id']; ?>"
-                                   class="owner-link" target="_blank">
-                                    <?php echo htmlspecialchars($row['customer_name']); ?>
-                                </a>
+                                <?php if ($row['customer_name']): ?>
+                                    <a href="userCard.php?user_id=<?php echo $row['customer_id']; ?>"
+                                       class="owner-link" target="_blank">
+                                        <?php echo htmlspecialchars($row['customer_name']); ?>
+                                    </a>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
                             </td>
+                            <td><?php echo htmlspecialchars($row['status']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="no-results">No flats found matching your criteria.</td>
+                        <td colspan="8" class="no-results">No flats found matching your criteria.</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>

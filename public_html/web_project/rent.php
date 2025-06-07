@@ -71,43 +71,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
     $expiry = $_POST['expiry'] ?? '';
     $card_name = $_POST['card_name'] ?? '';
 
+    // Validate all fields are provided
     if (!$start_date || !$end_date || !$card_number || !$expiry || !$card_name) {
         $errors[] = "All fields are required.";
     }
 
-    if (!preg_match('/^\d{9}$/', $card_number)) {
+    // Validate date formats and ensure they are valid
+    if ($start_date && $end_date) {
+        $start_date_obj = DateTime::createFromFormat('Y-m-d', $start_date);
+        $end_date_obj = DateTime::createFromFormat('Y-m-d', $end_date);
+        if (!$start_date_obj || !$end_date_obj) {
+            $errors[] = "Invalid start or end date format.";
+        } elseif ($start_date_obj >= $end_date_obj) {
+            $errors[] = "End date must be after start date.";
+        }
+    }
+
+    // Validate credit card number
+    if ($card_number && !preg_match('/^\d{9}$/', $card_number)) {
         $errors[] = "Credit card number must be exactly 9 digits.";
     }
 
-    if (strtotime($start_date) === false || strtotime($end_date) === false) {
-        $errors[] = "Invalid start or end date.";
-    } elseif (strtotime($start_date) >= strtotime($end_date)) {
-        $errors[] = "End date must be after start date.";
-    }
-
-    if (!preg_match('/^\d{4}-\d{2}$/', $expiry)) {
+    // Validate expiry date format
+    if ($expiry && !preg_match('/^\d{4}-\d{2}$/', $expiry)) {
         $errors[] = "Expiry date must be in YYYY-MM format.";
     }
 
-    // Check flat availability for the requested dates
-    $availability_stmt = $pdo->prepare("
-        SELECT rental_id FROM rentals
-        WHERE flat_id = :flat_id
-        AND status IN ('pending', 'current')
-        AND (
-            (:start_date BETWEEN start_date AND end_date)
-            OR (:end_date BETWEEN start_date AND end_date)
-            OR (start_date BETWEEN :start_date AND :end_date)
-            OR (end_date BETWEEN :start_date AND :end_date)
-        )
-    ");
-    $availability_stmt->execute([
-        'flat_id' => $flat_id,
-        'start_date' => $start_date,
-        'end_date' => $end_date
-    ]);
-    if ($availability_stmt->fetch()) {
-        $errors[] = "This flat is not available for the selected dates.";
+    // Check flat availability only if dates are valid
+    if (empty($errors)) {
+        $availability_stmt = $pdo->prepare("
+            SELECT rental_id FROM rentals
+            WHERE flat_id = :flat_id
+            AND status IN ('pending', 'current')
+            AND (
+                (:start_date BETWEEN start_date AND end_date)
+                OR (:end_date BETWEEN start_date AND end_date)
+                OR (start_date BETWEEN :start_date AND :end_date)
+                OR (end_date BETWEEN :start_date AND :end_date)
+            )
+        ");
+        $availability_stmt->execute([
+            'flat_id' => $flat_id,
+            'start_date' => $start_date,
+            'end_date' => $end_date
+        ]);
+        if ($availability_stmt->fetch()) {
+            $errors[] = "This flat is not available for the selected dates.";
+        }
     }
 
     if (empty($errors)) {
@@ -144,13 +154,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_rented) {
             // Insert into payments table
             $payment = $pdo->prepare("
                 INSERT INTO payments (rental_id, credit_card_number, expiry_date, cardholder_name, payment_date)
-                VALUES (:rental_id, :card_number, :expiry_date, :card_name, NOW())
+                VALUES (:rental_id, :card_number, :expiry_date, :cardholder_name, NOW())
             ");
             $payment->execute([
                 'rental_id' => $rental_id,
                 'card_number' => $card_number,
                 'expiry_date' => $expiry_date_db,
-                'card_name' => $card_name
+                'cardholder_name' => $card_name
             ]);
 
             // Send message to owner

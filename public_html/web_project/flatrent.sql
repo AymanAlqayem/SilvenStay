@@ -96,7 +96,7 @@ CREATE TABLE flats
     has_playground     BOOLEAN           NOT NULL,
     has_storage        BOOLEAN           NOT NULL,
     rental_conditions  TEXT,
-    status             ENUM ('pending', 'approved', 'rented') DEFAULT 'pending',
+    status             ENUM ('pending', 'approved', 'rented', 'rejected') DEFAULT 'pending',
     approved_by        INT,
     approval_date      DATETIME,
     FOREIGN KEY (owner_id) REFERENCES users (user_id),

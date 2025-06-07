@@ -24,7 +24,7 @@ $nav_links = [
     'owner' => [
         ['text' => 'Home', 'href' => 'main.php'],
         ['text' => 'About Us', 'href' => 'aboutUs.php'],
-        ['text' => 'My Flats', 'href' => 'myFlats.php'],
+        ['text' => 'My Flats', 'href' => 'viewOwnerFlats.php'],
         ['text' => 'Offer Flat for Rent', 'href' => 'offerFlat.php'],
         ['text' => 'View Messages', 'href' => 'messages.php'],
         ['text' => 'Profile', 'href' => 'profile.php']

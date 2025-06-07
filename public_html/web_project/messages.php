@@ -19,6 +19,7 @@ if (!isset($_SESSION['csrf_token'])) {
 
 try {
     $pdo = getPDOConnection();
+    $pdo = getPDOConnection();
 
     // Handle owner and manager actions
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
@@ -91,11 +92,11 @@ try {
 
                     // Fetch customer and flat details for the message
                     $details_stmt = $pdo->prepare("
-        SELECT u.name AS customer_name, f.reference_number
-        FROM users u
-        JOIN flats f ON f.flat_id = :flat_id
-        WHERE u.user_id = :customer_id
-    ");
+                        SELECT u.name AS customer_name, f.reference_number
+                        FROM users u
+                        JOIN flats f ON f.flat_id = :flat_id
+                        WHERE u.user_id = :customer_id
+                    ");
                     $details_stmt->execute([
                         'flat_id' => $flat_id,
                         'customer_id' => $rental['customer_id']
@@ -104,9 +105,9 @@ try {
 
                     // Send rejection message to customer without referencing rental_id
                     $message_stmt = $pdo->prepare("
-        INSERT INTO messages (user_id, title, message_body, sender, sent_date, message_type, flat_id)
-        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'rental', :flat_id)
-    ");
+                        INSERT INTO messages (user_id, title, message_body, sender, sent_date, message_type, flat_id)
+                        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'rental', :flat_id)
+                    ");
                     $message_stmt->execute([
                         'user_id' => $rental['customer_id'],
                         'title' => "Rental Request Rejected",
@@ -117,8 +118,6 @@ try {
 
                     $success_message = "Rental request rejected successfully.";
                 }
-
-
             }
         } elseif ($userType === 'manager' && isset($_POST['flat_id'])) {
             $flat_id = intval($_POST['flat_id']);
@@ -137,46 +136,58 @@ try {
                 $errors[] = "Invalid flat or not pending.";
             } else {
                 if ($action === 'accept_flat') {
-                    // Update flat status
-                    $update_stmt = $pdo->prepare("UPDATE flats SET status = 'approved' WHERE flat_id = :flat_id");
-                    $update_stmt->execute(['flat_id' => $flat_id]);
+                    // Generate unique 6-digit reference number
+                    do {
+                        $reference_number = sprintf("%06d", mt_rand(100000, 999999));
+                        $check_ref = $pdo->prepare("SELECT flat_id FROM flats WHERE reference_number = :reference_number");
+                        $check_ref->execute(['reference_number' => $reference_number]);
+                    } while ($check_ref->fetch());
+
+                    // Update flat status and reference number
+                    $update_stmt = $pdo->prepare("
+                        UPDATE flats
+                        SET status = 'approved', reference_number = :reference_number, approved_by = :manager_id, approval_date = NOW()
+                        WHERE flat_id = :flat_id
+                    ");
+                    $update_stmt->execute([
+                        'flat_id' => $flat_id,
+                        'reference_number' => $reference_number,
+                        'manager_id' => $userId
+                    ]);
 
                     // Send confirmation message to owner
                     $message_stmt = $pdo->prepare("
                         INSERT INTO messages (user_id, title, message_body, sender, sent_date, message_type, flat_id)
-                        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'flat_approval', :flat_id)
+                        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'approval', :flat_id)
                     ");
                     $message_stmt->execute([
                         'user_id' => $flat['owner_id'],
                         'title' => "Flat Approval",
-                        'message_body' => "Your flat {$flat['reference_number']} has been approved by the manager.",
+                        'message_body' => "Your flat {$reference_number} has been approved by the manager.",
                         'sender' => "System on behalf of Manager",
                         'flat_id' => $flat_id
                     ]);
 
                     $success_message = "Flat approved successfully.";
                 } elseif ($action === 'reject_flat') {
-                    // Delete related records
-                    $delete_photos = $pdo->prepare("DELETE FROM flat_photos WHERE flat_id = :flat_id");
-                    $delete_photos->execute(['flat_id' => $flat_id]);
+                    // Update flat status to rejected
+                    $update_stmt = $pdo->prepare("
+                        UPDATE flats
+                        SET status = 'rejected'
+                        WHERE flat_id = :flat_id
+                    ");
+                    $update_stmt->execute(['flat_id' => $flat_id]);
 
-                    $delete_descriptions = $pdo->prepare("DELETE FROM flat_descriptions WHERE flat_id = :flat_id");
-                    $delete_descriptions->execute(['flat_id' => $flat_id]);
-
-                    $delete_flat = $pdo->prepare("DELETE FROM flats WHERE flat_id = :flat_id");
-                    $delete_flat->execute(['flat_id' => $flat_id]);
-
-                    // Send rejection message to owner
+                    // Send rejection message to owner with flat_id = NULL
                     $message_stmt = $pdo->prepare("
                         INSERT INTO messages (user_id, title, message_body, sender, sent_date, message_type, flat_id)
-                        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'flat_approval', :flat_id)
+                        VALUES (:user_id, :title, :message_body, :sender, NOW(), 'approval', NULL)
                     ");
                     $message_stmt->execute([
                         'user_id' => $flat['owner_id'],
                         'title' => "Flat Rejection",
-                        'message_body' => "Your flat {$flat['reference_number']} has been rejected by the manager.",
-                        'sender' => "System on behalf of Manager",
-                        'flat_id' => $flat_id
+                        'message_body' => "Your flat submission (ID: $flat_id, Ref: {$flat['reference_number']}) has been rejected by the manager.",
+                        'sender' => "System on behalf of Manager"
                     ]);
 
                     $success_message = "Flat rejected successfully.";
@@ -200,9 +211,9 @@ try {
     if ($userType === 'customer') {
         $sql .= " AND m.message_type = 'rental'";
     } elseif ($userType === 'owner') {
-        $sql .= " AND m.message_type IN ('rental', 'flat_approval')";
+        $sql .= " AND m.message_type IN ('rental', 'approval')";
     } elseif ($userType === 'manager') {
-        $sql .= " AND m.message_type = 'flat_approval'";
+        $sql .= " AND m.message_type = 'approval'";
     }
 
     if (!empty($search)) {
@@ -330,7 +341,7 @@ try {
                                                value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                                         <button type="submit">Reject</button>
                                     </form>
-                                <?php elseif ($userType === 'manager' && $msg['message_type'] === 'flat_approval' && isset($msg['flat_id']) && $msg['flat_status'] === 'pending'): ?>
+                                <?php elseif ($userType === 'manager' && $msg['message_type'] === 'approval' && isset($msg['flat_id']) && $msg['flat_status'] === 'pending'): ?>
                                     <form method="POST" action="">
                                         <input type="hidden" name="flat_id" value="<?php echo (int)$msg['flat_id']; ?>">
                                         <input type="hidden" name="action" value="accept_flat">
