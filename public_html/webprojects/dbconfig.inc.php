@@ -14,9 +14,11 @@ function getPDOConnection()
 
 //    $host = "localhost";
 //    $port = "3306";
-//    $dbname = "	web1220040_silvenstaydb.sql";
+//    $dbname = "web1220040_silvenstaydb.sql";
 //    $username = "web1220040_proj1220040";
 //    $password = "pass1220040";
+//
+//    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
 
 
     try {

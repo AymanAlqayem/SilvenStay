@@ -65,7 +65,7 @@
                 </tr>
                 <tr>
                     <td>Customer</td>
-                    <td>emily@example.com</td>
+                    <td>emily@gmail.com</td>
                     <td>4Clientx</td>
                 </tr>
                 </tbody>

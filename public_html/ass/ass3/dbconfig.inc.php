@@ -8,7 +8,7 @@ function getPDOConnection()
     $username = "root";
     $password = "root";
 
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
+//    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
 
     //For cs panel server.
 
