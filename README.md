@@ -1,52 +1,77 @@
-SilvenStay – Flat Rental Web Application
+# SilvenStay – Flat Rental Web Application
 
-SilvenStay is a web application that streamlines the flat rental process, connecting Guests, Owners, Customers, and Managers in a single platform. The app enables browsing, listing, renting, scheduling viewings, and managing rental requests with an intuitive interface and role-based access.
+SilvenStay is a comprehensive **flat rental web application** designed to simplify and manage the entire rental workflow.  
+The platform connects **Guests, Owners, Customers, and Managers** within a single system, enabling flat discovery, listing, rental requests, viewing scheduling, and approval management through a secure, role-based architecture.
 
-Features
-User Roles
+The application focuses on usability, transparency, and efficient communication between all parties involved in the rental process.
 
-Guest:
+---
 
-Browse available flats with filters (price, location, bedrooms)
+## 🚀 Key Features
 
-Owner:
+### 👥 User Roles & Capabilities
 
-Offer flats for rent (pending manager approval)
+#### Guest
+- Browse available flats without registration
+- Filter flats by **price, location, and number of bedrooms**
+- View detailed flat information and images
 
-Manage listed flats and view notifications
+#### Owner
+- Submit flats for rent (subject to manager approval)
+- Manage personal flat listings
+- Receive notifications regarding approval status and rental activity
 
-Customer:
+#### Customer
+- Request to rent available flats
+- Schedule flat viewings
+- Track rental request status (**pending, approved, or declined**)
+- Checkout and manage rented flats
+- View rental history
 
-Request to rent flats and schedule viewings
+#### Manager
+- Review and approve or reject flats submitted by owners
+- Manage rental requests
+- Send notifications to owners and customers
+- Oversee platform activity
 
-Track rental requests (in progress, approved, or declined)
+---
 
-Checkout and manage rented flats
+## 🔔 Common Features
+- **Messaging & Notification System** for all authenticated users (excluding guests)
+- **Dynamic Flat Detail Pages** with images, pricing, and marketing information
+- **Role-Based Access Control** to ensure secure feature access
+- **Secure User Authentication & Registration** using PHP sessions
+- **Responsive Design** for seamless usage across desktop, tablet, and mobile devices
+- **Secure Database Operations** using PDO with MySQL to prevent SQL injection
 
-Manager:
+---
 
-Approve or reject flats submitted by owners
+## 🛠 Technology Stack
+- **Frontend:** HTML, CSS, JavaScript  
+- **Backend:** PHP (server-side logic, sessions, authentication)  
+- **Database:** MySQL (PDO for secure database interactions)  
+- **Development Tools:** VS Code, XAMPP (or any local PHP/MySQL server)  
 
-Manage rental requests and notifications
+---
 
-Common Features
+## ⚙️ Installation & Setup
 
-Messaging and notification system for all roles (except guests)
+### Prerequisites
+- PHP 7.4+
+- MySQL
+- Apache (XAMPP / WAMP / LAMP)
+- Git
 
-Dynamic flat detail pages with images and marketing information
+### Steps
+```bash
+# Clone the repository
+git clone <repository-url>
+cd SilvenStay
 
-Secure user authentication and registration using PHP sessions
+# Import the MySQL database
+# Configure database credentials in the PHP config file
 
-Responsive design for a smooth user experience on different devices
+# Start Apache and MySQL services
 
-Secure database operations using PDO with MySQL
-
-Technology Stack
-
-Frontend: HTML, CSS, JavaScript
-
-Backend: PHP (server-side logic, sessions, authentication)
-
-Database: MySQL (with PDO for secure operations)
-
-Tools: VS Code, XAMPP or any local PHP/MySQL server
+# Run the application
+# Open in browser: http://localhost/SilvenStay
